@@ -1,5 +1,5 @@
+import { Typography } from "@material-ui/core";
 import Head from "next/head";
-import Link from "next/link";
 
 export const siteTitle = "Track Voting";
 
@@ -13,6 +13,8 @@ export default function Layout({
   return (
     <div>
       <Head>
+        {" "}
+        <title>Track Voting</title>
         <meta name="description" content="Vote for your top tracks" />
         <meta
           name="viewport"
@@ -25,6 +27,16 @@ export default function Layout({
         />
       </Head>
       <main>{children}</main>
+      <footer>
+        <Typography variant="body2">
+          This application uses Discogs’ API but is not affiliated with,
+          sponsored or endorsed by Discogs. ‘Discogs’ is a trademark of Zink
+          Media, LLC.
+        </Typography>
+        <style jsx>{`
+          margin: 20px;
+        `}</style>
+      </footer>
     </div>
   );
 }

@@ -12,6 +12,11 @@ class DiscogsAPI extends RESTDataSource {
       "Authorization",
       `Discogs key=${this.context.key}, secret=${this.context.secret}`
     );
+    request.headers.set(
+      "User-Agent",
+      "TrackVoting/0.1 +https://track-voting.vercel.app/"
+    );
+    request.headers.set("Accept", "application/vnd.discogs.v2.html+json");
   }
 
   async search(query: String) {
