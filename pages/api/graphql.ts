@@ -30,6 +30,8 @@ const typeDefs = gql`
     title: String!
     id: ID!
     thumb: String
+    year: String
+    country: String
   }
 `;
 

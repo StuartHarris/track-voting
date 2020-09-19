@@ -6,6 +6,8 @@ export const SearchQuery = gql`
       title
       id
       thumb
+      year
+      country
     }
   }
 `;

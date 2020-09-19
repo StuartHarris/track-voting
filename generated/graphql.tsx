@@ -29,6 +29,8 @@ export type Master = {
   title: Scalars['String'];
   id: Scalars['ID'];
   thumb?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
 };
 
 export enum CacheControlScope {
@@ -46,7 +48,7 @@ export type SearchQueryQuery = (
   { __typename?: 'Query' }
   & { masters: Array<(
     { __typename?: 'Master' }
-    & Pick<Master, 'title' | 'id' | 'thumb'>
+    & Pick<Master, 'title' | 'id' | 'thumb' | 'year' | 'country'>
   )> }
 );
 
@@ -57,6 +59,8 @@ export const SearchQueryDocument = gql`
     title
     id
     thumb
+    year
+    country
   }
 }
     `;
