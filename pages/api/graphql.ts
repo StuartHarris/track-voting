@@ -15,7 +15,9 @@ class DiscogsAPI extends RESTDataSource {
   }
 
   async search(query: String) {
-    const data = await this.get(`database/search?q=${query}`);
+    const data = await this.get(
+      `database/search?q=${query}&genre=electronic&type=master`
+    );
     return data.results;
   }
 }
@@ -25,7 +27,9 @@ const typeDefs = gql`
     masters(search: String!): [Master!]!
   }
   type Master {
-    title: String
+    title: String!
+    id: ID!
+    thumb: String
   }
 `;
 

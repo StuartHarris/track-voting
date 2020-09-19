@@ -13,8 +13,16 @@ export default function Layout({
   return (
     <div>
       <Head>
-        <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="Vote for your top tracks" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
       </Head>
       <main>{children}</main>
     </div>

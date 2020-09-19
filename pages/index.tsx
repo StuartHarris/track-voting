@@ -1,4 +1,4 @@
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -19,11 +19,24 @@ const Masters = ({ search }: { search: string }) => {
   if (error) return <p>Oh no... {error.message}</p>;
 
   return (
-    <div>
-      {data?.masters.map((master, i) => (
-        <div key={i}>{master.title}</div>
-      ))}
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>thumb</th>
+          <th>title</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data?.masters.map((master, i) => (
+          <tr key={i}>
+            <td>
+              <img src={master.thumb} />
+            </td>
+            <td>{master.title}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
@@ -36,9 +49,10 @@ export default function Home() {
   return (
     <Layout>
       <section>
+        <Typography variant="h2">Find a track</Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField inputRef={register} name="search" />
-          <Button type="submit" color="primary">
+          <Button type="submit" variant="contained" color="primary">
             Go!
           </Button>
         </form>

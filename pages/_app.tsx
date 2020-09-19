@@ -2,14 +2,19 @@ import React from "react";
 import { withUrqlClient, NextUrqlAppContext } from "next-urql";
 import NextApp, { AppProps } from "next/app";
 import fetch from "isomorphic-unfetch";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 import "../styles/globals.css";
 
-// the URL to /api/graphql
 const GRAPHQL_ENDPOINT = `/api/graphql`;
 
 const App = ({ Component, pageProps }: AppProps) => {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <CssBaseline />
+      <Component {...pageProps} />
+    </>
+  );
 };
 
 App.getInitialProps = async (ctx: NextUrqlAppContext) => {
