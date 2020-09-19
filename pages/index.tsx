@@ -1,4 +1,5 @@
 import { Button, TextField } from "@material-ui/core";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Layout from "../components/layout";
@@ -9,9 +10,10 @@ type FormData = {
   exampleRequired: string;
 };
 
-const Masters: React.FC = () => {
-  const [{ data, fetching, error }, executeQuery] = useSearchQueryQuery({
-    variables: { search: "Let's Rock" },
+const Masters = ({ search }: { search: string }) => {
+  const [{ data, fetching, error }] = useSearchQueryQuery({
+    variables: { search },
+    pause: !search,
   });
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
@@ -27,11 +29,9 @@ const Masters: React.FC = () => {
 
 export default function Home() {
   const { register, handleSubmit } = useForm<FormData>();
+  const [query, setQuery] = useState("");
 
-  const onSubmit = ({ search }) => {
-    console.log(search);
-    // executeQuery(search);
-  };
+  const onSubmit = ({ search }) => setQuery(search);
 
   return (
     <Layout>
@@ -43,7 +43,7 @@ export default function Home() {
           </Button>
         </form>
       </section>
-      <Masters />
+      <Masters search={query} />
     </Layout>
   );
 }
