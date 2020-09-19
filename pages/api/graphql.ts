@@ -34,7 +34,7 @@ const typeDefs = gql`
   type Master {
     title: String!
     id: ID!
-    thumb: String
+    cover_image: String
     year: String
     country: String
   }

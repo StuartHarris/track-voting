@@ -5,7 +5,7 @@ export const SearchQuery = gql`
     masters(search: $search) {
       title
       id
-      thumb
+      cover_image
       year
       country
     }

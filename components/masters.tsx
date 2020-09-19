@@ -1,52 +1,46 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { StylesProvider } from "@material-ui/core/styles";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/MenuOutlined";
+import styles from "./masters.module.css";
 
 import { useSearchQueryQuery } from "../generated/graphql";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    table: {},
-  })
-);
-
-export const Masters = ({ search }: { search: string }) => {
+export function Masters({ search }: { search: string }) {
   const [{ data, fetching, error }] = useSearchQueryQuery({
     variables: { search },
     pause: !search,
   });
-  const classes = useStyles();
 
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Cover</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell align="right">Year</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.masters.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>
-                <img src={row.thumb} />
-              </TableCell>
-              <TableCell>{row.title}</TableCell>
-              <TableCell align="right">{`${row.year} (${row.country})`}</TableCell>
-            </TableRow>
+    <StylesProvider injectFirst>
+      <div className={styles.root}>
+        <GridList cellHeight={300} className={styles.gridlist}>
+          {data?.masters.map((tile) => (
+            <GridListTile key={tile.id}>
+              <img src={tile.cover_image} alt={tile.title} />
+              <GridListTileBar
+                title={tile.title}
+                subtitle={
+                  <span>
+                    {tile.year} ({tile.country})
+                  </span>
+                }
+                actionIcon={
+                  <IconButton aria-label={`info about ${tile.title}`}>
+                    <MenuIcon className={styles.icon} />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </GridList>
+      </div>
+    </StylesProvider>
   );
-};
+}

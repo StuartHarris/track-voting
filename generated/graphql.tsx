@@ -28,7 +28,7 @@ export type Master = {
   __typename?: 'Master';
   title: Scalars['String'];
   id: Scalars['ID'];
-  thumb?: Maybe<Scalars['String']>;
+  cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
 };
@@ -48,7 +48,7 @@ export type SearchQueryQuery = (
   { __typename?: 'Query' }
   & { masters: Array<(
     { __typename?: 'Master' }
-    & Pick<Master, 'title' | 'id' | 'thumb' | 'year' | 'country'>
+    & Pick<Master, 'title' | 'id' | 'cover_image' | 'year' | 'country'>
   )> }
 );
 
@@ -58,7 +58,7 @@ export const SearchQueryDocument = gql`
   masters(search: $search) {
     title
     id
-    thumb
+    cover_image
     year
     country
   }
