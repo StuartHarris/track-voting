@@ -2,7 +2,7 @@ import React from "react";
 import { withUrqlClient, NextUrqlAppContext } from "next-urql";
 import NextApp, { AppProps } from "next/app";
 import fetch from "isomorphic-unfetch";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { Container, CssBaseline } from "@material-ui/core";
 
 import "../styles/globals.css";
 
@@ -12,7 +12,9 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <CssBaseline />
-      <Component {...pageProps} />
+      <Container maxWidth="sm">
+        <Component {...pageProps} />
+      </Container>
     </>
   );
 };
