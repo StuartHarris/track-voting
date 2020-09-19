@@ -1,32 +1,16 @@
-import { useQuery } from "urql";
 import { Button, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import gql from "graphql-tag";
 
 import Layout from "../components/layout";
+import { useSearchQueryQuery } from "../generated/graphql";
 
 type FormData = {
   example: string;
   exampleRequired: string;
 };
 
-const SearchQuery = gql`
-  query($search: String!) {
-    masters(search: $search) {
-      title
-    }
-  }
-`;
-
-type MastersData = {
-  masters: {
-    title: string;
-  }[];
-};
-
 const Masters: React.FC = () => {
-  const [{ data, fetching, error }, executeQuery] = useQuery<MastersData>({
-    query: SearchQuery,
+  const [{ data, fetching, error }, executeQuery] = useSearchQueryQuery({
     variables: { search: "Let's Rock" },
   });
   if (fetching) return <p>Loading...</p>;
