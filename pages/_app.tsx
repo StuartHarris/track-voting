@@ -12,7 +12,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <CssBaseline />
-      <Container maxWidth="sm">
+      <Container maxWidth="xl">
         <Component {...pageProps} />
       </Container>
     </>
