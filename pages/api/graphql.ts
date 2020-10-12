@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from "apollo-server-micro";
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
+import FireSource from "@devskope/apollo-firesource";
 
 class DiscogsAPI extends RESTDataSource {
   constructor() {
@@ -30,6 +31,7 @@ class DiscogsAPI extends RESTDataSource {
 const typeDefs = gql`
   type Query {
     masters(search: String!): [Master!]!
+    choices: [Choice!]!
   }
   type Master {
     title: String!
@@ -38,12 +40,57 @@ const typeDefs = gql`
     year: String
     country: String
   }
+  type Choice {
+    choice1: String
+    choice2: String
+    choice3: String
+  }
+  type Mutation {
+    top3(one: String, two: String, three: String): ID!
+  }
 `;
 
 const resolvers = {
   Query: {
-    masters: async (_source, { search: query }, { dataSources }) => {
-      return dataSources.discogsAPI.search(query);
+    masters: async (
+      _source,
+      { search: query },
+      { dataSources: { discogsAPI } }
+    ) => {
+      return discogsAPI.search(query);
+    },
+    choices: async (
+      _source,
+      { search: _query },
+      { dataSources: { firestore } }
+    ) => {
+      try {
+        const docs = await firestore.documents().get({
+          collectionPath: "/choices",
+        });
+        return docs.documents.map((doc) => doc.fields);
+      } catch (error) {
+        console.log(JSON.stringify(error));
+        return [];
+      }
+    },
+  },
+  Mutation: {
+    top3: async (_source, { documentPath }, { dataSources: { firestore } }) => {
+      try {
+        // get document by id from collection
+        return firestore.documents().get({ documentPath });
+      } catch (error) {
+        /* handle error
+         *
+         * Ideally first handle Firestore error responses:
+         *   error.extensions?.response - exception details
+         *
+         * Then FireSource Errors:
+         *   error.extensions.code === <'BAD_USER_INPUT'|'UNAUTHENTICATED'>
+         *   error.message - exception details
+         */
+      }
     },
   },
 };
@@ -54,6 +101,9 @@ const apolloServer = new ApolloServer({
   dataSources: () => {
     return {
       discogsAPI: new DiscogsAPI(),
+      firestore: new FireSource({
+        projectId: "track-voting",
+      }),
     };
   },
   context: () => {
