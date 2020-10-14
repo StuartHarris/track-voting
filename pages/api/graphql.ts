@@ -1,6 +1,12 @@
 import { ApolloServer, gql } from "apollo-server-micro";
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
 import FireSource from "@devskope/apollo-firesource";
+import fs from "fs";
+
+fs.writeFileSync(
+  process.env.FIRESOURCE_CREDENTIALS,
+  Buffer.from(process.env.FIRESTORE_SA, "base64")
+);
 
 class DiscogsAPI extends RESTDataSource {
   constructor() {
