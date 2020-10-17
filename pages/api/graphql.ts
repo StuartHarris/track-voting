@@ -47,12 +47,13 @@ const typeDefs = gql`
     country: String
   }
   type Choice {
+    id: ID!
     choice1: String
     choice2: String
     choice3: String
   }
   type Mutation {
-    top3(one: String, two: String, three: String): ID!
+    choices(id: ID, choice1: String): Choice!
   }
 `;
 
@@ -68,34 +69,50 @@ const resolvers = {
     choices: async (
       _source,
       { search: _query },
-      { dataSources: { firestore } }
+      { dataSources: { firestore }, token }
     ) => {
+      console.log({ token });
       try {
         const docs = await firestore.documents().get({
           collectionPath: "/choices",
         });
         return docs.documents.map((doc) => doc.fields);
       } catch (error) {
-        console.log(JSON.stringify(error));
+        console.log({ error: JSON.stringify(error) });
         return [];
       }
     },
   },
   Mutation: {
-    top3: async (_source, { documentPath }, { dataSources: { firestore } }) => {
+    choices: async (
+      _source,
+      { id: uuid, choice1 },
+      { dataSources: { firestore }, token }
+    ) => {
+      const id = token || uuid;
+
       try {
-        // get document by id from collection
-        return firestore.documents().get({ documentPath });
+        const doc = await firestore.documents().update({
+          documentPath: `/choices/${id}`,
+          fieldsToReturn: ["id", "choice1"],
+          data: {
+            fields: {
+              id: {
+                stringValue: id,
+              },
+              choice1: {
+                stringValue: choice1,
+              },
+            },
+          },
+          updateOptions: {
+            updateAll: true,
+          },
+        });
+        return doc.fields;
       } catch (error) {
-        /* handle error
-         *
-         * Ideally first handle Firestore error responses:
-         *   error.extensions?.response - exception details
-         *
-         * Then FireSource Errors:
-         *   error.extensions.code === <'BAD_USER_INPUT'|'UNAUTHENTICATED'>
-         *   error.message - exception details
-         */
+        console.log({ error: JSON.stringify(error) });
+        return { id };
       }
     },
   },
@@ -112,12 +129,11 @@ const apolloServer = new ApolloServer({
       }),
     };
   },
-  context: () => {
-    return {
-      key: process.env["DISCOGS_KEY"],
-      secret: process.env["DISCOGS_SECRET"],
-    };
-  },
+  context: ({ req }) => ({
+    token: req.cookies["token"],
+    key: process.env["DISCOGS_KEY"],
+    secret: process.env["DISCOGS_SECRET"],
+  }),
 });
 
 export const config = {
