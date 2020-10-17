@@ -37,7 +37,7 @@ class DiscogsAPI extends RESTDataSource {
 const typeDefs = gql`
   type Query {
     masters(search: String!): [Master!]!
-    choices: [Choice!]!
+    choices(id: ID!): Choices
   }
   type Master {
     title: String!
@@ -46,14 +46,23 @@ const typeDefs = gql`
     year: String
     country: String
   }
-  type Choice {
+  type Choices {
     id: ID!
     choice1: String
     choice2: String
     choice3: String
+    choice4: String
+    choice5: String
   }
   type Mutation {
-    choices(id: ID, choice1: String): Choice!
+    choices(
+      id: ID
+      choice1: String
+      choice2: String
+      choice3: String
+      choice4: String
+      choice5: String
+    ): Choices
   }
 `;
 
@@ -68,40 +77,52 @@ const resolvers = {
     },
     choices: async (
       _source,
-      { search: _query },
+      { id: uuid },
       { dataSources: { firestore }, token }
     ) => {
-      console.log({ token });
+      const id = token || uuid;
+      const documentPath = `/choices/${id}`;
       try {
-        const docs = await firestore.documents().get({
-          collectionPath: "/choices",
-        });
-        return docs.documents.map((doc) => doc.fields);
+        const doc = await firestore.documents().get({ documentPath });
+        return doc.fields;
       } catch (error) {
         console.log({ error: JSON.stringify(error) });
-        return [];
+        return error;
       }
     },
   },
   Mutation: {
     choices: async (
       _source,
-      { id: uuid, choice1 },
+      { id: uuid, choice1, choice2, choice3, choice4, choice5 },
       { dataSources: { firestore }, token }
     ) => {
       const id = token || uuid;
+      const documentPath = `/choices/${id}`;
 
       try {
         const doc = await firestore.documents().update({
-          documentPath: `/choices/${id}`,
-          fieldsToReturn: ["id", "choice1"],
+          documentPath,
+          // fieldsToReturn: ["id", "choice1"],
           data: {
             fields: {
               id: {
                 stringValue: id,
               },
               choice1: {
-                stringValue: choice1,
+                stringValue: choice1 || "",
+              },
+              choice2: {
+                stringValue: choice2 || "",
+              },
+              choice3: {
+                stringValue: choice3 || "",
+              },
+              choice4: {
+                stringValue: choice4 || "",
+              },
+              choice5: {
+                stringValue: choice5 || "",
               },
             },
           },
@@ -109,10 +130,10 @@ const resolvers = {
             updateAll: true,
           },
         });
-        return doc.fields;
+        return doc?.fields;
       } catch (error) {
         console.log({ error: JSON.stringify(error) });
-        return { id };
+        return error;
       }
     },
   },
