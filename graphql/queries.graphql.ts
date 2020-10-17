@@ -10,6 +10,21 @@ export const SearchQuery = gql`
       country
     }
   }
+  query Versions($master_id: ID!) {
+    versions(master_id: $master_id) {
+      id
+      title
+      label
+      released
+    }
+  }
+  query Tracks($release_id: ID!) {
+    tracks(release_id: $release_id) {
+      title
+      duration
+      position
+    }
+  }
   query Choices {
     choices {
       choice1

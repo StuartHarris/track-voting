@@ -17,6 +17,8 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   masters: Array<Master>;
+  versions: Array<Version>;
+  tracks: Array<Track>;
   choices?: Maybe<Choices>;
 };
 
@@ -26,17 +28,42 @@ export type QueryMastersArgs = {
 };
 
 
+export type QueryVersionsArgs = {
+  master_id: Scalars['ID'];
+};
+
+
+export type QueryTracksArgs = {
+  release_id: Scalars['ID'];
+};
+
+
 export type QueryChoicesArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
 export type Master = {
   __typename?: 'Master';
-  title: Scalars['String'];
   id: Scalars['ID'];
+  title: Scalars['String'];
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
+};
+
+export type Version = {
+  __typename?: 'Version';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  label: Scalars['String'];
+  released: Scalars['String'];
+};
+
+export type Track = {
+  __typename?: 'Track';
+  title: Scalars['String'];
+  duration: Scalars['String'];
+  position: Scalars['String'];
 };
 
 export type Choices = {
@@ -83,6 +110,32 @@ export type SearchQueryQuery = (
   )> }
 );
 
+export type VersionsQueryVariables = Exact<{
+  master_id: Scalars['ID'];
+}>;
+
+
+export type VersionsQuery = (
+  { __typename?: 'Query' }
+  & { versions: Array<(
+    { __typename?: 'Version' }
+    & Pick<Version, 'id' | 'title' | 'label' | 'released'>
+  )> }
+);
+
+export type TracksQueryVariables = Exact<{
+  release_id: Scalars['ID'];
+}>;
+
+
+export type TracksQuery = (
+  { __typename?: 'Query' }
+  & { tracks: Array<(
+    { __typename?: 'Track' }
+    & Pick<Track, 'title' | 'duration' | 'position'>
+  )> }
+);
+
 export type ChoicesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -109,6 +162,33 @@ export const SearchQueryDocument = gql`
 
 export function useSearchQueryQuery(options: Omit<Urql.UseQueryArgs<SearchQueryQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SearchQueryQuery>({ query: SearchQueryDocument, ...options });
+};
+export const VersionsDocument = gql`
+    query Versions($master_id: ID!) {
+  versions(master_id: $master_id) {
+    id
+    title
+    label
+    released
+  }
+}
+    `;
+
+export function useVersionsQuery(options: Omit<Urql.UseQueryArgs<VersionsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<VersionsQuery>({ query: VersionsDocument, ...options });
+};
+export const TracksDocument = gql`
+    query Tracks($release_id: ID!) {
+  tracks(release_id: $release_id) {
+    title
+    duration
+    position
+  }
+}
+    `;
+
+export function useTracksQuery(options: Omit<Urql.UseQueryArgs<TracksQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TracksQuery>({ query: TracksDocument, ...options });
 };
 export const ChoicesDocument = gql`
     query Choices {

@@ -32,19 +32,38 @@ class DiscogsAPI extends RESTDataSource {
     );
     return data.results;
   }
+  async versions(master_id: String) {
+    return await this.get(`masters/${master_id}/versions`);
+  }
+  async tracks(release_id: String) {
+    return await this.get(`releases/${release_id}`);
+  }
 }
 
 const typeDefs = gql`
   type Query {
     masters(search: String!): [Master!]!
+    versions(master_id: ID!): [Version!]!
+    tracks(release_id: ID!): [Track!]!
     choices(id: ID): Choices
   }
   type Master {
-    title: String!
     id: ID!
+    title: String!
     cover_image: String
     year: String
     country: String
+  }
+  type Version {
+    id: ID!
+    title: String!
+    label: String!
+    released: String!
+  }
+  type Track {
+    title: String!
+    duration: String!
+    position: String!
   }
   type Choices {
     id: ID!
@@ -75,6 +94,22 @@ const resolvers = {
     ) => {
       return discogsAPI.search(query);
     },
+    versions: async (
+      _source,
+      { master_id },
+      { dataSources: { discogsAPI } }
+    ) => {
+      const data = await discogsAPI.versions(master_id);
+      return data.versions;
+    },
+    tracks: async (
+      _source,
+      { release_id },
+      { dataSources: { discogsAPI } }
+    ) => {
+      const data = await discogsAPI.tracks(release_id);
+      return data.tracklist;
+    },
     choices: async (
       _source,
       { id: uuid },
@@ -89,6 +124,7 @@ const resolvers = {
         const doc = await firestore.documents().get({ documentPath });
         return doc.fields;
       } catch (error) {
+        if (error.extensions?.response?.status === 404) return { id };
         console.log({ error: JSON.stringify(error) });
         return error;
       }
