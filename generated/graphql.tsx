@@ -17,11 +17,17 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   masters: Array<Master>;
+  choices?: Maybe<Choices>;
 };
 
 
 export type QueryMastersArgs = {
   search: Scalars['String'];
+};
+
+
+export type QueryChoicesArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type Master = {
@@ -31,6 +37,31 @@ export type Master = {
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
+};
+
+export type Choices = {
+  __typename?: 'Choices';
+  id: Scalars['ID'];
+  choice1?: Maybe<Scalars['String']>;
+  choice2?: Maybe<Scalars['String']>;
+  choice3?: Maybe<Scalars['String']>;
+  choice4?: Maybe<Scalars['String']>;
+  choice5?: Maybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  choices?: Maybe<Choices>;
+};
+
+
+export type MutationChoicesArgs = {
+  id?: Maybe<Scalars['ID']>;
+  choice1?: Maybe<Scalars['String']>;
+  choice2?: Maybe<Scalars['String']>;
+  choice3?: Maybe<Scalars['String']>;
+  choice4?: Maybe<Scalars['String']>;
+  choice5?: Maybe<Scalars['String']>;
 };
 
 export enum CacheControlScope {
@@ -52,6 +83,17 @@ export type SearchQueryQuery = (
   )> }
 );
 
+export type ChoicesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChoicesQuery = (
+  { __typename?: 'Query' }
+  & { choices?: Maybe<(
+    { __typename?: 'Choices' }
+    & Pick<Choices, 'choice1' | 'choice2' | 'choice3' | 'choice4' | 'choice5'>
+  )> }
+);
+
 
 export const SearchQueryDocument = gql`
     query SearchQuery($search: String!) {
@@ -67,4 +109,19 @@ export const SearchQueryDocument = gql`
 
 export function useSearchQueryQuery(options: Omit<Urql.UseQueryArgs<SearchQueryQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SearchQueryQuery>({ query: SearchQueryDocument, ...options });
+};
+export const ChoicesDocument = gql`
+    query Choices {
+  choices {
+    choice1
+    choice2
+    choice3
+    choice4
+    choice5
+  }
+}
+    `;
+
+export function useChoicesQuery(options: Omit<Urql.UseQueryArgs<ChoicesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ChoicesQuery>({ query: ChoicesDocument, ...options });
 };

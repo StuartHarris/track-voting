@@ -3,6 +3,7 @@ import { useState } from "react";
 import Layout from "../components/layout";
 import SearchForm from "../components/search_form";
 import Masters from "../components/masters";
+import Choices from "../components/choices";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -11,6 +12,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <Choices />
       <SearchForm onSubmit={onSubmit} />
       <Masters search={query} />
     </Layout>

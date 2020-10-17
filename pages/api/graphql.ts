@@ -37,7 +37,7 @@ class DiscogsAPI extends RESTDataSource {
 const typeDefs = gql`
   type Query {
     masters(search: String!): [Master!]!
-    choices(id: ID!): Choices
+    choices(id: ID): Choices
   }
   type Master {
     title: String!
@@ -81,6 +81,9 @@ const resolvers = {
       { dataSources: { firestore }, token }
     ) => {
       const id = token || uuid;
+      console.log({ id });
+
+      if (id == null) return null;
       const documentPath = `/choices/${id}`;
       try {
         const doc = await firestore.documents().get({ documentPath });
@@ -98,6 +101,7 @@ const resolvers = {
       { dataSources: { firestore }, token }
     ) => {
       const id = token || uuid;
+      if (id == null) return null;
       const documentPath = `/choices/${id}`;
 
       try {

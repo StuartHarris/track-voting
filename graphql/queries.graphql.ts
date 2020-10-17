@@ -10,4 +10,13 @@ export const SearchQuery = gql`
       country
     }
   }
+  query Choices {
+    choices {
+      choice1
+      choice2
+      choice3
+      choice4
+      choice5
+    }
+  }
 `;
