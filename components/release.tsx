@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { StylesProvider } from "@material-ui/core/styles";
 import styles from "./release.module.css";
@@ -28,6 +29,8 @@ interface Props {
 
 const Release: React.FC<Props> = ({ release_id }) => {
   const router = useRouter();
+  const [updateError, setUpdateError] = useState("");
+
   const [{ data, fetching, error }] = useReleaseQuery({
     variables: { id: release_id },
   });
@@ -40,7 +43,6 @@ const Release: React.FC<Props> = ({ release_id }) => {
     return <p>Oh no... {error.message}</p>;
   }
 
-  let update_error;
   const onChooseTrack = async (track) => {
     let existing = choices.data.choices;
     let edited = {};
@@ -53,9 +55,13 @@ const Release: React.FC<Props> = ({ release_id }) => {
       }
       edited[key] = value;
     }
+    if (!chosen) {
+      setUpdateError("You have already chosen 5 tracks. Delete one first.");
+      return;
+    }
     const { error } = await updateChoices(edited);
     if (error) {
-      update_error = error.message;
+      setUpdateError(error.message);
     } else {
       router.push({ pathname: "/" });
     }
@@ -132,10 +138,10 @@ const Release: React.FC<Props> = ({ release_id }) => {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer>{" "}
+          {updateError && <div>{updateError}</div>}
         </Grid>
       </Grid>
-      {update_error && <div>{update_error}</div>}
     </StylesProvider>
   );
 };

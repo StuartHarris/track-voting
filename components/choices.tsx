@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StylesProvider } from "@material-ui/core/styles";
 import { Delete, ArrowUpward, ArrowDownward } from "@material-ui/icons";
 
@@ -9,6 +10,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
 
 import styles from "./choices.module.css";
 
@@ -18,6 +20,7 @@ import {
 } from "../generated/graphql";
 
 const Choices: React.FC = () => {
+  const [updateError, setUpdateError] = useState("");
   const [{ data, fetching, error }] = useChoicesQuery();
   const [, updateChoices] = useUpdateChoicesMutation();
 
@@ -26,14 +29,13 @@ const Choices: React.FC = () => {
     return <p>Oh no... {error.message}</p>;
   }
 
-  let update_error = "";
   const onDelete = async (num) => {
     let existing = data.choices;
     let edited = { ...existing };
     edited[`choice${num}`] = "";
     const { error } = await updateChoices(edited);
     if (error) {
-      update_error = error.message;
+      setUpdateError(error.message);
     }
   };
 
@@ -46,7 +48,7 @@ const Choices: React.FC = () => {
     edited[`choice${num + 1}`] = current;
     const { error } = await updateChoices(edited);
     if (error) {
-      update_error = error.message;
+      setUpdateError(error.message);
     }
   };
 
@@ -59,12 +61,13 @@ const Choices: React.FC = () => {
     edited[`choice${num - 1}`] = current;
     const { error } = await updateChoices(edited);
     if (error) {
-      update_error = error.message;
+      setUpdateError(error.message);
     }
   };
 
   return (
     <StylesProvider injectFirst>
+      <Typography variant="h4">Your top 5 Trade tracks ...</Typography>
       <TableContainer component={Paper} className={styles.root}>
         <Table size="small" aria-label="simple table">
           <TableHead>
@@ -83,7 +86,7 @@ const Choices: React.FC = () => {
               .map((_, i) => (
                 <TableRow key={i} className={styles.choice}>
                   <TableCell component="th" scope="row" align="right">
-                    {i}
+                    {i + 1}
                   </TableCell>
                   <TableCell align="left" className={styles.track}>
                     {data?.choices[`choice${i + 1}`]}
@@ -118,7 +121,7 @@ const Choices: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {update_error && <div>{update_error}</div>}
+      {updateError && <div>{updateError}</div>}
     </StylesProvider>
   );
 };

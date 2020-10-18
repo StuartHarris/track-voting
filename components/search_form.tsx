@@ -16,7 +16,7 @@ export default function ({ onSubmit }) {
   return (
     <StylesProvider injectFirst>
       <form className={styles.root} onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h4">Find a track...</Typography>
+        <Typography variant="h4">Find a track ...</Typography>
         <TextField
           inputRef={register}
           name="search"
