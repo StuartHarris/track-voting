@@ -24,6 +24,7 @@ export const SearchQuery = gql`
       notes
       released
       tracklist {
+        type_
         title
         duration
         position
@@ -35,6 +36,28 @@ export const SearchQuery = gql`
   }
   query Choices {
     choices {
+      choice1
+      choice2
+      choice3
+      choice4
+      choice5
+    }
+  }
+  mutation UpdateChoices(
+    $choice1: String
+    $choice2: String
+    $choice3: String
+    $choice4: String
+    $choice5: String
+  ) {
+    choices(
+      choice1: $choice1
+      choice2: $choice2
+      choice3: $choice3
+      choice4: $choice4
+      choice5: $choice5
+    ) {
+      id
       choice1
       choice2
       choice3

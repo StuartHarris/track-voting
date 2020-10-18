@@ -73,8 +73,9 @@ const typeDefs = gql`
   }
   type Track {
     title: String!
-    duration: String!
-    position: String!
+    type_: String!
+    duration: String
+    position: String
   }
   type Choices {
     id: ID!

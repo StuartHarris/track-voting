@@ -77,8 +77,9 @@ export type Image = {
 export type Track = {
   __typename?: 'Track';
   title: Scalars['String'];
-  duration: Scalars['String'];
-  position: Scalars['String'];
+  type_: Scalars['String'];
+  duration?: Maybe<Scalars['String']>;
+  position?: Maybe<Scalars['String']>;
 };
 
 export type Choices = {
@@ -143,7 +144,7 @@ export type ReleaseQuery = (
       & Pick<Label, 'catno' | 'name'>
     )>>>, tracklist?: Maybe<Array<Maybe<(
       { __typename?: 'Track' }
-      & Pick<Track, 'title' | 'duration' | 'position'>
+      & Pick<Track, 'type_' | 'title' | 'duration' | 'position'>
     )>>>, images?: Maybe<Array<Maybe<(
       { __typename?: 'Image' }
       & Pick<Image, 'resource_url'>
@@ -159,6 +160,23 @@ export type ChoicesQuery = (
   & { choices?: Maybe<(
     { __typename?: 'Choices' }
     & Pick<Choices, 'choice1' | 'choice2' | 'choice3' | 'choice4' | 'choice5'>
+  )> }
+);
+
+export type UpdateChoicesMutationVariables = Exact<{
+  choice1?: Maybe<Scalars['String']>;
+  choice2?: Maybe<Scalars['String']>;
+  choice3?: Maybe<Scalars['String']>;
+  choice4?: Maybe<Scalars['String']>;
+  choice5?: Maybe<Scalars['String']>;
+}>;
+
+
+export type UpdateChoicesMutation = (
+  { __typename?: 'Mutation' }
+  & { choices?: Maybe<(
+    { __typename?: 'Choices' }
+    & Pick<Choices, 'id' | 'choice1' | 'choice2' | 'choice3' | 'choice4' | 'choice5'>
   )> }
 );
 
@@ -193,6 +211,7 @@ export const ReleaseDocument = gql`
     notes
     released
     tracklist {
+      type_
       title
       duration
       position
@@ -221,4 +240,20 @@ export const ChoicesDocument = gql`
 
 export function useChoicesQuery(options: Omit<Urql.UseQueryArgs<ChoicesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ChoicesQuery>({ query: ChoicesDocument, ...options });
+};
+export const UpdateChoicesDocument = gql`
+    mutation UpdateChoices($choice1: String, $choice2: String, $choice3: String, $choice4: String, $choice5: String) {
+  choices(choice1: $choice1, choice2: $choice2, choice3: $choice3, choice4: $choice4, choice5: $choice5) {
+    id
+    choice1
+    choice2
+    choice3
+    choice4
+    choice5
+  }
+}
+    `;
+
+export function useUpdateChoicesMutation() {
+  return Urql.useMutation<UpdateChoicesMutation, UpdateChoicesMutationVariables>(UpdateChoicesDocument);
 };

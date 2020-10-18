@@ -20,3 +20,9 @@
   min-width: 275px;
   max-width: 600px;
 }
+.track {
+  cursor: pointer;
+}
+.track:hover {
+  background-color: #eee;
+}
