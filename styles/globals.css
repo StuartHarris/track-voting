@@ -3,6 +3,11 @@ body {
   padding: 0;
   margin: 0;
   font-family: Roboto;
+  background-color: black;
+}
+
+body div div {
+  background-color: black;
 }
 
 a {

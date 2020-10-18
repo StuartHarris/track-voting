@@ -4,10 +4,11 @@ import withWidth, {
   isWidthUp,
   WithWidthProps,
 } from "@material-ui/core/withWidth";
-import { StylesProvider } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
+import { Typography } from "@material-ui/core";
+
 import styles from "./results.module.css";
 
 import { useSearchQuery } from "../generated/graphql";
@@ -42,45 +43,42 @@ const Results: React.FC<Props> = ({ query, width }) => {
   };
 
   return (
-    <StylesProvider injectFirst>
-      <div className={styles.root}>
-        <GridList
-          cellHeight="auto"
-          cols={getGridListCols()}
-          className={styles.gridlist}
-        >
-          {data?.search.map((tile) => (
-            <GridListTile key={tile.id}>
-              <Link href={`/releases/${tile.id}`}>
-                <a>
-                  <img
-                    className={styles.center_cropped}
-                    src={tile.cover_image}
-                    alt={tile.title}
-                  />
-                  <GridListTileBar
-                    title={tile.title}
-                    className={styles.bar}
-                    subtitle={
-                      <>
-                        <div>
-                          {[...Array.from(new Set(tile.label))]
-                            .sort()
-                            .join(", ")}
-                        </div>
-                        <div>
-                          {tile.year} ({tile.country})
-                        </div>
-                      </>
-                    }
-                  />
-                </a>
-              </Link>
-            </GridListTile>
-          ))}
-        </GridList>
-      </div>
-    </StylesProvider>
+    <div className={styles.root}>
+      <GridList
+        cellHeight="auto"
+        cols={getGridListCols()}
+        className={styles.gridlist}
+        spacing={30}
+      >
+        {data?.search.map((tile) => (
+          <GridListTile key={tile.id}>
+            <Link href={`/releases/${tile.id}`}>
+              <a>
+                <img
+                  className={styles.center_cropped}
+                  src={tile.cover_image}
+                  alt={tile.title}
+                />
+                <GridListTileBar
+                  title={tile.title}
+                  className={styles.bar}
+                  subtitle={
+                    <>
+                      <div>
+                        {[...Array.from(new Set(tile.label))].sort().join(", ")}
+                      </div>
+                      <div>
+                        {tile.year} ({tile.country})
+                      </div>
+                    </>
+                  }
+                />
+              </a>
+            </Link>
+          </GridListTile>
+        ))}
+      </GridList>
+    </div>
   );
 };
 

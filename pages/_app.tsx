@@ -3,6 +3,7 @@ import { withUrqlClient, NextUrqlAppContext } from "next-urql";
 import NextApp, { AppProps } from "next/app";
 import fetch from "isomorphic-unfetch";
 import { Container, CssBaseline } from "@material-ui/core";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Cookies from "cookies";
 import { v4 as uuidV4 } from "uuid";
 
@@ -11,13 +12,18 @@ import "../styles/globals.css";
 const GRAPHQL_ENDPOINT = "/api/graphql";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const theme = createMuiTheme({
+    palette: {
+      type: "dark",
+    },
+  });
   return (
-    <>
+    <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="xl">
         <Component {...pageProps} />
       </Container>
-    </>
+    </MuiThemeProvider>
   );
 };
 

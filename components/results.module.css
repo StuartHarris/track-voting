@@ -3,11 +3,13 @@
   flex-wrap: wrap;
   justify-content: space-around;
   overflow: hidden;
-  background-color: white;
 }
 
 .bar {
   height: 80px;
+}
+.bar div {
+  background-color: transparent;
 }
 
 .center_cropped {

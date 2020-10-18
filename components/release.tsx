@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { StylesProvider } from "@material-ui/core/styles";
 import styles from "./release.module.css";
 
 import Card from "@material-ui/core/Card";
@@ -78,71 +77,71 @@ const Release: React.FC<Props> = ({ release_id }) => {
   const artists = data?.release.artists.map((a) => a.name).join(", ");
 
   return (
-    <StylesProvider injectFirst>
-      <Grid container spacing={3} className={styles.root}>
-        <Grid item sm={12} md={3}>
-          <Card className={styles.card}>
-            <CardHeader title={data?.release.title} subheader={artists} />{" "}
-            <CardMedia
-              className={styles.media}
-              image={data?.release.images[0].resource_url}
-              title={data?.release.title}
-            />
-            <CardContent>
-              <Typography
-                className={styles.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                {labels}
-              </Typography>
-              <Typography className={styles.pos} color="textSecondary">
-                {data?.release.released}
-              </Typography>
-              <Typography variant="body2" component="p">
-                {data?.release.notes}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={9}>
-          <TableContainer component={Paper} className={styles.tracks}>
-            <Table
-              className={styles.table}
-              size="small"
-              aria-label="simple table"
+    <Grid container spacing={3} className={styles.root}>
+      <Grid item sm={12} md={3}>
+        <Card className={styles.card}>
+          <CardHeader title={data?.release.title} subheader={artists} />{" "}
+          <CardMedia
+            className={styles.media}
+            image={data?.release.images[0].resource_url}
+            title={data?.release.title}
+          />
+          <CardContent>
+            <Typography
+              className={styles.title}
+              color="textSecondary"
+              gutterBottom
             >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Position</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Duration</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data?.release.tracklist.map((track, i) => (
-                  <TableRow
-                    key={i}
-                    onClick={() =>
-                      track.type_ === "track" &&
-                      onChooseTrack(`${artists} – ${track.title}`)
-                    }
-                    className={
-                      track.type_ === "track" ? styles.track : styles.side
-                    }
-                  >
-                    <TableCell>{track.position}</TableCell>
-                    <TableCell>{track.title}</TableCell>
-                    <TableCell>{track.duration}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>{" "}
-          {updateError && <div>{updateError}</div>}
-        </Grid>
+              {labels}
+            </Typography>
+            <Typography className={styles.pos} color="textSecondary">
+              {data?.release.released}
+            </Typography>
+            <Typography variant="body2" component="p">
+              {data?.release.notes}
+            </Typography>
+          </CardContent>
+        </Card>
       </Grid>
-    </StylesProvider>
+      <Grid item sm={12} md={9}>
+        <TableContainer component={Paper} className={styles.tracks}>
+          <Typography variant="h4">Choose a track ...</Typography>
+          <Table
+            className={styles.table}
+            size="small"
+            aria-label="simple table"
+            title="Select a track"
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Position</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Duration</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.release.tracklist.map((track, i) => (
+                <TableRow
+                  key={i}
+                  onClick={() =>
+                    track.type_ === "track" &&
+                    onChooseTrack(`${artists} – ${track.title}`)
+                  }
+                  className={
+                    track.type_ === "track" ? styles.track : styles.side
+                  }
+                >
+                  <TableCell>{track.position}</TableCell>
+                  <TableCell>{track.title}</TableCell>
+                  <TableCell>{track.duration}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>{" "}
+        {updateError && <div>{updateError}</div>}
+      </Grid>
+    </Grid>
   );
 };
 

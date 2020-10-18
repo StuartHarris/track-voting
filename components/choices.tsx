@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { StylesProvider } from "@material-ui/core/styles";
 import { Delete, ArrowUpward, ArrowDownward } from "@material-ui/icons";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -66,9 +65,9 @@ const Choices: React.FC = () => {
   };
 
   return (
-    <StylesProvider injectFirst>
-      <Typography variant="h4">Your top 5 Trade tracks ...</Typography>
-      <TableContainer component={Paper} className={styles.root}>
+    <>
+      <TableContainer component={Paper} className={styles.table}>
+        <Typography variant="h4">Your top 5 Trade tracks ...</Typography>
         <Table size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -122,7 +121,7 @@ const Choices: React.FC = () => {
         </Table>
       </TableContainer>
       {updateError && <div>{updateError}</div>}
-    </StylesProvider>
+    </>
   );
 };
 

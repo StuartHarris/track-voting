@@ -1,13 +1,14 @@
-.root {
+.table {
   min-width: 300px;
-  max-width: 800px;
-  margin-top: 20px;
+  max-width: 1034px;
+  margin: 20px 0;
+  padding: 10px;
 }
 .table tr {
   cursor: pointer;
 }
 .choice:hover {
-  background-color: #eee;
+  background-color: #666;
 }
 .track {
   width: 100%;

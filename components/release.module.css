@@ -19,13 +19,15 @@
 .tracks {
   min-width: 275px;
   max-width: 600px;
+  margin: 20px 0;
+  padding: 10px;
 }
 .track {
   cursor: pointer;
 }
 .side {
-  background-color: #ccc;
+  background-color: #333;
 }
 .track:hover {
-  background-color: #eee;
+  background-color: #666;
 }
