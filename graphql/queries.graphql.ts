@@ -14,6 +14,9 @@ export const SearchQuery = gql`
   query Release($id: ID!) {
     release(id: $id) {
       title
+      artists {
+        name
+      }
       labels {
         catno
         name

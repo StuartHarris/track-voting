@@ -50,11 +50,17 @@ export type Release = {
   __typename?: 'Release';
   id: Scalars['ID'];
   title: Scalars['String'];
+  artists?: Maybe<Array<Maybe<Artist>>>;
   labels?: Maybe<Array<Maybe<Label>>>;
   notes?: Maybe<Scalars['String']>;
   released?: Maybe<Scalars['String']>;
   tracklist?: Maybe<Array<Maybe<Track>>>;
   images?: Maybe<Array<Maybe<Image>>>;
+};
+
+export type Artist = {
+  __typename?: 'Artist';
+  name?: Maybe<Scalars['String']>;
 };
 
 export type Label = {
@@ -129,7 +135,10 @@ export type ReleaseQuery = (
   & { release?: Maybe<(
     { __typename?: 'Release' }
     & Pick<Release, 'title' | 'notes' | 'released'>
-    & { labels?: Maybe<Array<Maybe<(
+    & { artists?: Maybe<Array<Maybe<(
+      { __typename?: 'Artist' }
+      & Pick<Artist, 'name'>
+    )>>>, labels?: Maybe<Array<Maybe<(
       { __typename?: 'Label' }
       & Pick<Label, 'catno' | 'name'>
     )>>>, tracklist?: Maybe<Array<Maybe<(
@@ -174,6 +183,9 @@ export const ReleaseDocument = gql`
     query Release($id: ID!) {
   release(id: $id) {
     title
+    artists {
+      name
+    }
     labels {
       catno
       name

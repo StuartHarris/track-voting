@@ -54,11 +54,15 @@ const typeDefs = gql`
   type Release {
     id: ID!
     title: String!
+    artists: [Artist]
     labels: [Label]
     notes: String
     released: String
     tracklist: [Track]
     images: [Image]
+  }
+  type Artist {
+    name: String
   }
   type Label {
     catno: String
