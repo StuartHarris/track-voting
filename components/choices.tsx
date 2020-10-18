@@ -37,6 +37,32 @@ const Choices: React.FC = () => {
     }
   };
 
+  const onMoveDown = async (num) => {
+    let existing = data.choices;
+    let edited = { ...existing };
+    let current = edited[`choice${num}`];
+    let next = edited[`choice${num + 1}`];
+    edited[`choice${num}`] = next;
+    edited[`choice${num + 1}`] = current;
+    const { error } = await updateChoices(edited);
+    if (error) {
+      update_error = error.message;
+    }
+  };
+
+  const onMoveUp = async (num) => {
+    let existing = data.choices;
+    let edited = { ...existing };
+    let current = edited[`choice${num}`];
+    let next = edited[`choice${num - 1}`];
+    edited[`choice${num}`] = next;
+    edited[`choice${num - 1}`] = current;
+    const { error } = await updateChoices(edited);
+    if (error) {
+      update_error = error.message;
+    }
+  };
+
   return (
     <StylesProvider injectFirst>
       <TableContainer component={Paper} className={styles.root}>
@@ -62,14 +88,20 @@ const Choices: React.FC = () => {
                   <TableCell>
                     {i < 4 && (
                       <IconButton size="small">
-                        <ArrowDownward color="action" />
+                        <ArrowDownward
+                          color="action"
+                          onClick={() => onMoveDown(i + 1)}
+                        />
                       </IconButton>
                     )}
                   </TableCell>
                   <TableCell>
                     {i !== 0 && (
                       <IconButton size="small">
-                        <ArrowUpward color="action" />
+                        <ArrowUpward
+                          color="action"
+                          onClick={() => onMoveUp(i + 1)}
+                        />
                       </IconButton>
                     )}
                   </TableCell>
