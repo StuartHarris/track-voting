@@ -6,6 +6,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -33,64 +34,74 @@ const Release: React.FC<Props> = ({ release_id }) => {
 
   return (
     <StylesProvider injectFirst>
-      <Card className={styles.root}>
-        <CardHeader
-          title={data?.release.title}
-          subheader={data?.release.artists.map((a) => a.name).join(", ")}
-        />{" "}
-        <CardMedia
-          className={styles.media}
-          image={data?.release.images[0].resource_url}
-          title={data?.release.title}
-        />
-        <CardContent>
-          <Typography
-            className={styles.title}
-            color="textSecondary"
-            gutterBottom
-          >
-            {[
-              ...Array.from(
-                new Set(
-                  data?.release.labels.map((l) => `${l.name} (${l.catno})`)
-                )
-              ),
-            ]
-              .sort()
-              .join(", ")}
-          </Typography>
-          <Typography className={styles.pos} color="textSecondary">
-            {data?.release.released}
-          </Typography>
-          <Typography variant="body2" component="p">
-            {data?.release.notes}
-          </Typography>
-        </CardContent>
-      </Card>
-      <TableContainer component={Paper}>
-        <Table className={styles.table} size="small" aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Position</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Duration</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.release.tracklist.map((track, i) => (
-              <TableRow key={i}>
-                <TableCell>{track.position}</TableCell>
-                <TableCell>
-                  <Link href={`/`} passHref>
-                    <a>{track.title}</a>
-                  </Link>
-                </TableCell>
-                <TableCell>{track.duration}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container spacing={3} className={styles.root}>
+        <Grid item sm={12} md={3}>
+          <Card className={styles.card}>
+            <CardHeader
+              title={data?.release.title}
+              subheader={data?.release.artists.map((a) => a.name).join(", ")}
+            />{" "}
+            <CardMedia
+              className={styles.media}
+              image={data?.release.images[0].resource_url}
+              title={data?.release.title}
+            />
+            <CardContent>
+              <Typography
+                className={styles.title}
+                color="textSecondary"
+                gutterBottom
+              >
+                {[
+                  ...Array.from(
+                    new Set(
+                      data?.release.labels.map((l) => `${l.name} (${l.catno})`)
+                    )
+                  ),
+                ]
+                  .sort()
+                  .join(", ")}
+              </Typography>
+              <Typography className={styles.pos} color="textSecondary">
+                {data?.release.released}
+              </Typography>
+              <Typography variant="body2" component="p">
+                {data?.release.notes}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item sm={12} md={9}>
+          <TableContainer component={Paper} className={styles.tracks}>
+            <Table
+              className={styles.table}
+              size="small"
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Position</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Duration</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data?.release.tracklist.map((track, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{track.position}</TableCell>
+                    <TableCell>
+                      <Link href={`/`} passHref>
+                        <a>{track.title}</a>
+                      </Link>
+                    </TableCell>
+                    <TableCell>{track.duration}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
     </StylesProvider>
   );
 };

@@ -1,11 +1,10 @@
 .root {
+  width: 100%;
+  flex-grow: 1;
+}
+.card {
   min-width: 275px;
   max-width: 345px;
-}
-.bullet {
-  display: inline-block;
-  margin: 0 2px;
-  transform: scale(0.8);
 }
 .media {
   height: 0;
@@ -16,4 +15,8 @@
 }
 .pos {
   margin-bottom: 12px;
+}
+.tracks {
+  min-width: 275px;
+  max-width: 600px;
 }
