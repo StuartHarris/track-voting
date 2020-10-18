@@ -26,13 +26,6 @@ const Choices: React.FC = () => {
     return <p>Oh no... {error.message}</p>;
   }
 
-  const rows = [
-    { num: 1, track: data?.choices?.choice1 },
-    { num: 2, track: data?.choices?.choice2 },
-    { num: 3, track: data?.choices?.choice3 },
-    { num: 4, track: data?.choices?.choice4 },
-    { num: 5, track: data?.choices?.choice5 },
-  ];
   let update_error = "";
   const onDelete = async (num) => {
     let existing = data.choices;
@@ -50,32 +43,44 @@ const Choices: React.FC = () => {
         <Table size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="right" colSpan={2} width="100">
+              <TableCell align="right" colSpan={4} width="100">
                 Choice
               </TableCell>
               <TableCell align="left">Track</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((choice, i) => (
-              <TableRow key={i} className={styles.choice}>
-                <TableCell width="150">
-                  <IconButton size="small" onClick={() => onDelete(choice.num)}>
-                    <Delete color="action" />
-                  </IconButton>
-                  <IconButton size="small">
-                    <ArrowDownward color="action" />
-                  </IconButton>
-                  <IconButton size="small">
-                    <ArrowUpward color="action" />
-                  </IconButton>
-                </TableCell>
-                <TableCell component="th" scope="row" align="right">
-                  {choice.num}
-                </TableCell>
-                <TableCell align="left">{choice.track}</TableCell>
-              </TableRow>
-            ))}
+            {Array(5)
+              .fill(1)
+              .map((_, i) => (
+                <TableRow key={i} className={styles.choice}>
+                  <TableCell>
+                    <IconButton size="small" onClick={() => onDelete(i + 1)}>
+                      <Delete color="action" />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    {i < 4 && (
+                      <IconButton size="small">
+                        <ArrowDownward color="action" />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {i !== 0 && (
+                      <IconButton size="small">
+                        <ArrowUpward color="action" />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                  <TableCell component="th" scope="row" align="right">
+                    {i}
+                  </TableCell>
+                  <TableCell align="left" className={styles.track}>
+                    {data?.choices[`choice${i + 1}`]}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
