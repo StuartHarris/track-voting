@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { StylesProvider } from "@material-ui/core/styles";
 import styles from "./release.module.css";
 
@@ -27,6 +27,7 @@ interface Props {
 }
 
 const Release: React.FC<Props> = ({ release_id }) => {
+  const router = useRouter();
   const [{ data, fetching, error }] = useReleaseQuery({
     variables: { id: release_id },
   });
@@ -42,8 +43,6 @@ const Release: React.FC<Props> = ({ release_id }) => {
   let update_error;
   const onChooseTrack = async (track) => {
     let existing = choices.data.choices;
-    console.log(existing);
-
     let edited = {};
     let chosen = false;
     for (let key in existing) {
@@ -54,9 +53,11 @@ const Release: React.FC<Props> = ({ release_id }) => {
       }
       edited[key] = value;
     }
-    const { error, data } = await updateChoices(edited);
+    const { error } = await updateChoices(edited);
     if (error) {
       update_error = error.message;
+    } else {
+      router.push({ pathname: "/" });
     }
   };
 
@@ -118,11 +119,11 @@ const Release: React.FC<Props> = ({ release_id }) => {
                     key={i}
                     onClick={() =>
                       track.type_ === "track" &&
-                      onChooseTrack(
-                        `${artists} – ${data?.release.title} (${track.title})`
-                      )
+                      onChooseTrack(`${artists} – ${track.title}`)
                     }
-                    className={track.type_ === "track" ? styles.track : ""}
+                    className={
+                      track.type_ === "track" ? styles.track : styles.side
+                    }
                   >
                     <TableCell>{track.position}</TableCell>
                     <TableCell>{track.title}</TableCell>

@@ -14,8 +14,9 @@ export default function Home() {
     <Layout>
       <Choices />
       <Release release_id={release_id.toString()} />
+      <hr />
       <Link href="/" passHref scroll={false}>
-        <a>home</a>
+        <a>Choose another track</a>
       </Link>
     </Layout>
   );

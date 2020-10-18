@@ -23,6 +23,9 @@
 .track {
   cursor: pointer;
 }
+.side {
+  background-color: #ccc;
+}
 .track:hover {
   background-color: #eee;
 }
