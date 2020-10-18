@@ -17,6 +17,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 
 import {
+  useChoicesQuery,
   useReleaseQuery,
   useUpdateChoicesMutation,
 } from "../generated/graphql";
@@ -29,6 +30,7 @@ const Release: React.FC<Props> = ({ release_id }) => {
   const [{ data, fetching, error }] = useReleaseQuery({
     variables: { id: release_id },
   });
+  const [choices] = useChoicesQuery();
 
   const [, updateChoices] = useUpdateChoicesMutation();
 
@@ -39,7 +41,20 @@ const Release: React.FC<Props> = ({ release_id }) => {
 
   let update_error;
   const onChooseTrack = async (track) => {
-    const { error, data } = await updateChoices({ choice1: track });
+    let existing = choices.data.choices;
+    console.log(existing);
+
+    let edited = {};
+    let chosen = false;
+    for (let key in existing) {
+      let value = existing[key];
+      if (!chosen && !value) {
+        value = track;
+        chosen = true;
+      }
+      edited[key] = value;
+    }
+    const { error, data } = await updateChoices(edited);
     if (error) {
       update_error = error.message;
     }
