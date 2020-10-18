@@ -69,10 +69,12 @@ const Choices: React.FC = () => {
         <Table size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="right" colSpan={4} width="100">
+              <TableCell align="right" width="100">
                 Choice
               </TableCell>
-              <TableCell align="left">Track</TableCell>
+              <TableCell align="left" colSpan={4}>
+                Track
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -80,6 +82,12 @@ const Choices: React.FC = () => {
               .fill(1)
               .map((_, i) => (
                 <TableRow key={i} className={styles.choice}>
+                  <TableCell component="th" scope="row" align="right">
+                    {i}
+                  </TableCell>
+                  <TableCell align="left" className={styles.track}>
+                    {data?.choices[`choice${i + 1}`]}
+                  </TableCell>
                   <TableCell>
                     <IconButton size="small" onClick={() => onDelete(i + 1)}>
                       <Delete color="action" />
@@ -104,12 +112,6 @@ const Choices: React.FC = () => {
                         />
                       </IconButton>
                     )}
-                  </TableCell>
-                  <TableCell component="th" scope="row" align="right">
-                    {i}
-                  </TableCell>
-                  <TableCell align="left" className={styles.track}>
-                    {data?.choices[`choice${i + 1}`]}
                   </TableCell>
                 </TableRow>
               ))}
