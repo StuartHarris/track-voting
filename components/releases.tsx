@@ -8,20 +8,18 @@ import { StylesProvider } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/MenuOutlined";
-import styles from "./masters.module.css";
+import styles from "./releases.module.css";
 
-import { useSearchQueryQuery } from "../generated/graphql";
+import { useSearchQuery } from "../generated/graphql";
 
 interface Props extends WithWidthProps {
-  search: string;
+  query: string;
 }
 
-const Masters: React.FC<Props> = ({ search, width }) => {
-  const [{ data, fetching, error }] = useSearchQueryQuery({
-    variables: { search },
-    pause: !search,
+const Releases: React.FC<Props> = ({ query, width }) => {
+  const [{ data, fetching, error }] = useSearchQuery({
+    variables: { query },
+    pause: !query,
   });
 
   if (fetching) return <p>Loading...</p>;
@@ -51,22 +49,21 @@ const Masters: React.FC<Props> = ({ search, width }) => {
           cols={getGridListCols()}
           className={styles.gridlist}
         >
-          {data?.masters.map((tile) => (
+          {data?.search.map((tile) => (
             <GridListTile key={tile.id}>
-              <Link href={`/masters/${tile.id}`}>
+              <Link href={`/releases/${tile.id}`}>
                 <a>
-                  <img src={tile.cover_image} alt={tile.title} />
+                  <img
+                    className={styles.center_cropped}
+                    src={tile.cover_image}
+                    alt={tile.title}
+                  />
                   <GridListTileBar
                     title={tile.title}
                     subtitle={
                       <span>
                         {tile.year} ({tile.country})
                       </span>
-                    }
-                    actionIcon={
-                      <IconButton aria-label={`info about ${tile.title}`}>
-                        <MenuIcon className={styles.icon} />
-                      </IconButton>
                     }
                   />
                 </a>
@@ -79,4 +76,4 @@ const Masters: React.FC<Props> = ({ search, width }) => {
   );
 };
 
-export default withWidth()(Masters);
+export default withWidth()(Releases);

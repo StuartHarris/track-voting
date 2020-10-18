@@ -12,12 +12,12 @@ import styles from "./choices.module.css";
 import { useTracksQuery } from "../generated/graphql";
 
 interface Props {
-  version_id: string;
+  release_id: string;
 }
 
-const Tracks: React.FC<Props> = ({ version_id }) => {
+const Tracks: React.FC<Props> = ({ release_id }) => {
   const [{ data, fetching, error }] = useTracksQuery({
-    variables: { release_id: version_id },
+    variables: { release_id },
   });
 
   if (fetching) return <p>Loading...</p>;

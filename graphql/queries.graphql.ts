@@ -1,21 +1,13 @@
 import gql from "graphql-tag";
 
 export const SearchQuery = gql`
-  query SearchQuery($search: String!) {
-    masters(search: $search) {
+  query Search($query: String!) {
+    search(query: $query) {
       title
       id
       cover_image
       year
       country
-    }
-  }
-  query Versions($master_id: ID!) {
-    versions(master_id: $master_id) {
-      id
-      title
-      label
-      released
     }
   }
   query Tracks($release_id: ID!) {

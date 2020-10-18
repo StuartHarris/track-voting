@@ -16,20 +16,14 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  masters: Array<Master>;
-  versions: Array<Version>;
+  search: Array<Release>;
   tracks: Array<Track>;
   choices?: Maybe<Choices>;
 };
 
 
-export type QueryMastersArgs = {
-  search: Scalars['String'];
-};
-
-
-export type QueryVersionsArgs = {
-  master_id: Scalars['ID'];
+export type QuerySearchArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -42,21 +36,13 @@ export type QueryChoicesArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
-export type Master = {
-  __typename?: 'Master';
+export type Release = {
+  __typename?: 'Release';
   id: Scalars['ID'];
   title: Scalars['String'];
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
-};
-
-export type Version = {
-  __typename?: 'Version';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  label: Scalars['String'];
-  released: Scalars['String'];
 };
 
 export type Track = {
@@ -97,29 +83,16 @@ export enum CacheControlScope {
 }
 
 
-export type SearchQueryQueryVariables = Exact<{
-  search: Scalars['String'];
+export type SearchQueryVariables = Exact<{
+  query: Scalars['String'];
 }>;
 
 
-export type SearchQueryQuery = (
+export type SearchQuery = (
   { __typename?: 'Query' }
-  & { masters: Array<(
-    { __typename?: 'Master' }
-    & Pick<Master, 'title' | 'id' | 'cover_image' | 'year' | 'country'>
-  )> }
-);
-
-export type VersionsQueryVariables = Exact<{
-  master_id: Scalars['ID'];
-}>;
-
-
-export type VersionsQuery = (
-  { __typename?: 'Query' }
-  & { versions: Array<(
-    { __typename?: 'Version' }
-    & Pick<Version, 'id' | 'title' | 'label' | 'released'>
+  & { search: Array<(
+    { __typename?: 'Release' }
+    & Pick<Release, 'title' | 'id' | 'cover_image' | 'year' | 'country'>
   )> }
 );
 
@@ -148,9 +121,9 @@ export type ChoicesQuery = (
 );
 
 
-export const SearchQueryDocument = gql`
-    query SearchQuery($search: String!) {
-  masters(search: $search) {
+export const SearchDocument = gql`
+    query Search($query: String!) {
+  search(query: $query) {
     title
     id
     cover_image
@@ -160,22 +133,8 @@ export const SearchQueryDocument = gql`
 }
     `;
 
-export function useSearchQueryQuery(options: Omit<Urql.UseQueryArgs<SearchQueryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<SearchQueryQuery>({ query: SearchQueryDocument, ...options });
-};
-export const VersionsDocument = gql`
-    query Versions($master_id: ID!) {
-  versions(master_id: $master_id) {
-    id
-    title
-    label
-    released
-  }
-}
-    `;
-
-export function useVersionsQuery(options: Omit<Urql.UseQueryArgs<VersionsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<VersionsQuery>({ query: VersionsDocument, ...options });
+export function useSearchQuery(options: Omit<Urql.UseQueryArgs<SearchQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<SearchQuery>({ query: SearchDocument, ...options });
 };
 export const TracksDocument = gql`
     query Tracks($release_id: ID!) {

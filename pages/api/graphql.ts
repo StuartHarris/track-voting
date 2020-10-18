@@ -28,12 +28,9 @@ class DiscogsAPI extends RESTDataSource {
 
   async search(query: String) {
     const data = await this.get(
-      `database/search?q=${query}&genre=electronic&type=master`
+      `database/search?q=${query}&genre=electronic&type=release`
     );
     return data.results;
-  }
-  async versions(master_id: String) {
-    return await this.get(`masters/${master_id}/versions`);
   }
   async tracks(release_id: String) {
     return await this.get(`releases/${release_id}`);
@@ -42,23 +39,16 @@ class DiscogsAPI extends RESTDataSource {
 
 const typeDefs = gql`
   type Query {
-    masters(search: String!): [Master!]!
-    versions(master_id: ID!): [Version!]!
+    search(query: String!): [Release!]!
     tracks(release_id: ID!): [Track!]!
     choices(id: ID): Choices
   }
-  type Master {
+  type Release {
     id: ID!
     title: String!
     cover_image: String
     year: String
     country: String
-  }
-  type Version {
-    id: ID!
-    title: String!
-    label: String!
-    released: String!
   }
   type Track {
     title: String!
@@ -87,20 +77,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    masters: async (
-      _source,
-      { search: query },
-      { dataSources: { discogsAPI } }
-    ) => {
+    search: async (_source, { query }, { dataSources: { discogsAPI } }) => {
       return discogsAPI.search(query);
-    },
-    versions: async (
-      _source,
-      { master_id },
-      { dataSources: { discogsAPI } }
-    ) => {
-      const data = await discogsAPI.versions(master_id);
-      return data.versions;
     },
     tracks: async (
       _source,
@@ -116,7 +94,6 @@ const resolvers = {
       { dataSources: { firestore }, token }
     ) => {
       const id = token || uuid;
-      console.log({ id });
 
       if (id == null) return null;
       const documentPath = `/choices/${id}`;

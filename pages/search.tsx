@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 
 import Layout from "../components/layout";
-import Masters from "../components/masters";
+import Releases from "../components/releases";
 import Choices from "../components/choices";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <Layout>
       <Choices />
-      <Masters search={query.toString()} />
+      <Releases query={query.toString()} />
     </Layout>
   );
 }
