@@ -11,11 +11,23 @@ export const SearchQuery = gql`
       country
     }
   }
-  query Tracks($release_id: ID!) {
-    tracks(release_id: $release_id) {
+  query Release($id: ID!) {
+    release(id: $id) {
       title
-      duration
-      position
+      labels {
+        catno
+        name
+      }
+      notes
+      released
+      tracklist {
+        title
+        duration
+        position
+      }
+      images {
+        resource_url
+      }
     }
   }
   query Choices {

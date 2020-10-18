@@ -9,15 +9,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import styles from "./choices.module.css";
 
-import { useTracksQuery } from "../generated/graphql";
+import { useReleaseQuery } from "../generated/graphql";
 
 interface Props {
   release_id: string;
 }
 
-const Tracks: React.FC<Props> = ({ release_id }) => {
-  const [{ data, fetching, error }] = useTracksQuery({
-    variables: { release_id },
+const Release: React.FC<Props> = ({ release_id }) => {
+  const [{ data, fetching, error }] = useReleaseQuery({
+    variables: { id: release_id },
   });
 
   if (fetching) return <p>Loading...</p>;
@@ -37,15 +37,15 @@ const Tracks: React.FC<Props> = ({ release_id }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.tracks.map((row, i) => (
+            {data?.release.tracklist.map((track, i) => (
               <TableRow key={i}>
-                <TableCell>{row.position}</TableCell>
+                <TableCell>{track.position}</TableCell>
                 <TableCell>
                   <Link href={`/`} passHref>
-                    <a>{row.title}</a>
+                    <a>{track.title}</a>
                   </Link>
                 </TableCell>
-                <TableCell>{row.duration}</TableCell>
+                <TableCell>{track.duration}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -55,4 +55,4 @@ const Tracks: React.FC<Props> = ({ release_id }) => {
   );
 };
 
-export default Tracks;
+export default Release;

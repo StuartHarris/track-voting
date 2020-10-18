@@ -32,24 +32,40 @@ class DiscogsAPI extends RESTDataSource {
     );
     return data.results;
   }
-  async tracks(release_id: String) {
-    return await this.get(`releases/${release_id}`);
+  async release(id: String) {
+    return await this.get(`releases/${id}`);
   }
 }
 
 const typeDefs = gql`
   type Query {
-    search(query: String!): [Release!]!
-    tracks(release_id: ID!): [Track!]!
+    search(query: String!): [SearchResult!]!
+    release(id: ID!): Release
     choices(id: ID): Choices
   }
-  type Release {
+  type SearchResult {
     id: ID!
     title: String!
     label: [String]
     cover_image: String
     year: String
     country: String
+  }
+  type Release {
+    id: ID!
+    title: String!
+    labels: [Label]
+    notes: String
+    released: String
+    tracklist: [Track]
+    images: [Image]
+  }
+  type Label {
+    catno: String
+    name: String
+  }
+  type Image {
+    resource_url: String
   }
   type Track {
     title: String!
@@ -81,13 +97,8 @@ const resolvers = {
     search: async (_source, { query }, { dataSources: { discogsAPI } }) => {
       return discogsAPI.search(query);
     },
-    tracks: async (
-      _source,
-      { release_id },
-      { dataSources: { discogsAPI } }
-    ) => {
-      const data = await discogsAPI.tracks(release_id);
-      return data.tracklist;
+    release: async (_source, { id }, { dataSources: { discogsAPI } }) => {
+      return await discogsAPI.release(id);
     },
     choices: async (
       _source,

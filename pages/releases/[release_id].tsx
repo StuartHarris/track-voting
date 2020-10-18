@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import Layout from "../../components/layout";
 import Choices from "../../components/choices";
-import Tracks from "../../components/tracks";
+import Release from "../../components/release";
 
 export default function Home() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <Layout>
       <Choices />
-      <Tracks release_id={release_id.toString()} />
+      <Release release_id={release_id.toString()} />
       <Link href="/" passHref scroll={false}>
         <a>home</a>
       </Link>

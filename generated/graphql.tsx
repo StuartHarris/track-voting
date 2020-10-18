@@ -16,8 +16,8 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  search: Array<Release>;
-  tracks: Array<Track>;
+  search: Array<SearchResult>;
+  release?: Maybe<Release>;
   choices?: Maybe<Choices>;
 };
 
@@ -27,8 +27,8 @@ export type QuerySearchArgs = {
 };
 
 
-export type QueryTracksArgs = {
-  release_id: Scalars['ID'];
+export type QueryReleaseArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -36,14 +36,36 @@ export type QueryChoicesArgs = {
   id?: Maybe<Scalars['ID']>;
 };
 
-export type Release = {
-  __typename?: 'Release';
+export type SearchResult = {
+  __typename?: 'SearchResult';
   id: Scalars['ID'];
   title: Scalars['String'];
   label?: Maybe<Array<Maybe<Scalars['String']>>>;
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
+};
+
+export type Release = {
+  __typename?: 'Release';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  labels?: Maybe<Array<Maybe<Label>>>;
+  notes?: Maybe<Scalars['String']>;
+  released?: Maybe<Scalars['String']>;
+  tracklist?: Maybe<Array<Maybe<Track>>>;
+  images?: Maybe<Array<Maybe<Image>>>;
+};
+
+export type Label = {
+  __typename?: 'Label';
+  catno?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Image = {
+  __typename?: 'Image';
+  resource_url?: Maybe<Scalars['String']>;
 };
 
 export type Track = {
@@ -92,21 +114,31 @@ export type SearchQueryVariables = Exact<{
 export type SearchQuery = (
   { __typename?: 'Query' }
   & { search: Array<(
-    { __typename?: 'Release' }
-    & Pick<Release, 'id' | 'title' | 'label' | 'cover_image' | 'year' | 'country'>
+    { __typename?: 'SearchResult' }
+    & Pick<SearchResult, 'id' | 'title' | 'label' | 'cover_image' | 'year' | 'country'>
   )> }
 );
 
-export type TracksQueryVariables = Exact<{
-  release_id: Scalars['ID'];
+export type ReleaseQueryVariables = Exact<{
+  id: Scalars['ID'];
 }>;
 
 
-export type TracksQuery = (
+export type ReleaseQuery = (
   { __typename?: 'Query' }
-  & { tracks: Array<(
-    { __typename?: 'Track' }
-    & Pick<Track, 'title' | 'duration' | 'position'>
+  & { release?: Maybe<(
+    { __typename?: 'Release' }
+    & Pick<Release, 'title' | 'notes' | 'released'>
+    & { labels?: Maybe<Array<Maybe<(
+      { __typename?: 'Label' }
+      & Pick<Label, 'catno' | 'name'>
+    )>>>, tracklist?: Maybe<Array<Maybe<(
+      { __typename?: 'Track' }
+      & Pick<Track, 'title' | 'duration' | 'position'>
+    )>>>, images?: Maybe<Array<Maybe<(
+      { __typename?: 'Image' }
+      & Pick<Image, 'resource_url'>
+    )>>> }
   )> }
 );
 
@@ -138,18 +170,30 @@ export const SearchDocument = gql`
 export function useSearchQuery(options: Omit<Urql.UseQueryArgs<SearchQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SearchQuery>({ query: SearchDocument, ...options });
 };
-export const TracksDocument = gql`
-    query Tracks($release_id: ID!) {
-  tracks(release_id: $release_id) {
+export const ReleaseDocument = gql`
+    query Release($id: ID!) {
+  release(id: $id) {
     title
-    duration
-    position
+    labels {
+      catno
+      name
+    }
+    notes
+    released
+    tracklist {
+      title
+      duration
+      position
+    }
+    images {
+      resource_url
+    }
   }
 }
     `;
 
-export function useTracksQuery(options: Omit<Urql.UseQueryArgs<TracksQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<TracksQuery>({ query: TracksDocument, ...options });
+export function useReleaseQuery(options: Omit<Urql.UseQueryArgs<ReleaseQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ReleaseQuery>({ query: ReleaseDocument, ...options });
 };
 export const ChoicesDocument = gql`
     query Choices {

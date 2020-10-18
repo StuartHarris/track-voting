@@ -8,7 +8,7 @@ import { StylesProvider } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import styles from "./releases.module.css";
+import styles from "./results.module.css";
 
 import { useSearchQuery } from "../generated/graphql";
 
@@ -16,7 +16,7 @@ interface Props extends WithWidthProps {
   query: string;
 }
 
-const Releases: React.FC<Props> = ({ query, width }) => {
+const Results: React.FC<Props> = ({ query, width }) => {
   const [{ data, fetching, error }] = useSearchQuery({
     variables: { query },
     pause: !query,
@@ -84,4 +84,4 @@ const Releases: React.FC<Props> = ({ query, width }) => {
   );
 };
 
-export default withWidth()(Releases);
+export default withWidth()(Results);
