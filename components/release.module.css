@@ -1,0 +1,33 @@
+.root {
+  width: 100%;
+  flex-grow: 1;
+}
+.card {
+  min-width: 275px;
+  max-width: 345px;
+}
+.media {
+  height: 0;
+  padding-top: 100%;
+}
+.title {
+  font-size: 14px;
+}
+.pos {
+  margin-bottom: 12px;
+}
+.tracks {
+  min-width: 275px;
+  max-width: 600px;
+  margin: 20px 0;
+  padding: 10px;
+}
+.track {
+  cursor: pointer;
+}
+.side {
+  background-color: #333;
+}
+.track:hover {
+  background-color: #666;
+}

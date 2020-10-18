@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
 
 import Layout from "../components/layout";
 import SearchForm from "../components/search_form";
-import { Masters } from "../components/masters";
 
 export default function Home() {
-  const [query, setQuery] = useState("");
+  const router = useRouter();
 
-  const onSubmit = ({ search }) => setQuery(search);
+  const onSubmit = ({ search: query }) =>
+    router.push({
+      pathname: "/search",
+      query: { query },
+    });
 
   return (
     <Layout>
       <SearchForm onSubmit={onSubmit} />
-      <Masters search={query} />
     </Layout>
   );
 }
