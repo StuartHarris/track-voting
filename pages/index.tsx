@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 
 import Layout from "../components/layout";
 import SearchForm from "../components/search_form";
-import Choices from "../components/choices";
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +14,6 @@ export default function Home() {
 
   return (
     <Layout>
-      <Choices />
       <SearchForm onSubmit={onSubmit} />
     </Layout>
   );

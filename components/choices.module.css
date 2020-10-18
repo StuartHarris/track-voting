@@ -1,3 +1,11 @@
-.table th:first-child {
-  width: 100px;
+.root {
+  min-width: 300px;
+  max-width: 800px;
+  margin-top: 20px;
+}
+.table tr {
+  cursor: pointer;
+}
+.choice:hover {
+  background-color: #eee;
 }

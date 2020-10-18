@@ -1,5 +1,6 @@
 import { Typography } from "@material-ui/core";
 import Head from "next/head";
+import Choices from "../components/choices";
 
 export const siteTitle = "Track Voting";
 
@@ -26,7 +27,10 @@ export default function Layout({
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
       </Head>
-      <main>{children}</main>
+      <main>
+        <Choices />
+        {children}
+      </main>
       <footer>
         <Typography variant="body2">
           This application uses Discogs’ API but is not affiliated with,
