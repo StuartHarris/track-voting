@@ -3,8 +3,9 @@ import gql from "graphql-tag";
 export const SearchQuery = gql`
   query Search($query: String!) {
     search(query: $query) {
-      title
       id
+      title
+      label
       cover_image
       year
       country

@@ -60,10 +60,18 @@ const Releases: React.FC<Props> = ({ query, width }) => {
                   />
                   <GridListTileBar
                     title={tile.title}
+                    className={styles.bar}
                     subtitle={
-                      <span>
-                        {tile.year} ({tile.country})
-                      </span>
+                      <>
+                        <div>
+                          {[...Array.from(new Set(tile.label))]
+                            .sort()
+                            .join(", ")}
+                        </div>
+                        <div>
+                          {tile.year} ({tile.country})
+                        </div>
+                      </>
                     }
                   />
                 </a>

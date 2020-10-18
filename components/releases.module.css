@@ -6,6 +6,10 @@
   background-color: white;
 }
 
+.bar {
+  height: 80px;
+}
+
 .center_cropped {
   object-fit: none; /* Do not scale the image */
   object-position: center; /* Center the image within the element */

@@ -46,6 +46,7 @@ const typeDefs = gql`
   type Release {
     id: ID!
     title: String!
+    label: [String]
     cover_image: String
     year: String
     country: String

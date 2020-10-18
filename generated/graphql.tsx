@@ -40,6 +40,7 @@ export type Release = {
   __typename?: 'Release';
   id: Scalars['ID'];
   title: Scalars['String'];
+  label?: Maybe<Array<Maybe<Scalars['String']>>>;
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
@@ -92,7 +93,7 @@ export type SearchQuery = (
   { __typename?: 'Query' }
   & { search: Array<(
     { __typename?: 'Release' }
-    & Pick<Release, 'title' | 'id' | 'cover_image' | 'year' | 'country'>
+    & Pick<Release, 'id' | 'title' | 'label' | 'cover_image' | 'year' | 'country'>
   )> }
 );
 
@@ -124,8 +125,9 @@ export type ChoicesQuery = (
 export const SearchDocument = gql`
     query Search($query: String!) {
   search(query: $query) {
-    title
     id
+    title
+    label
     cover_image
     year
     country
