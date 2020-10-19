@@ -4,12 +4,15 @@ import { Search } from "@material-ui/icons";
 
 import styles from "./search_form.module.css";
 
-type FormData = {
-  example: string;
-  exampleRequired: string;
+export type FormData = {
+  query: string;
 };
 
-export default function ({ onSubmit }) {
+interface Props {
+  onSubmit: (d: FormData) => void;
+}
+
+const SearchForm: React.FC<Props> = ({ onSubmit }) => {
   const { register, handleSubmit } = useForm<FormData>();
 
   return (
@@ -18,8 +21,8 @@ export default function ({ onSubmit }) {
         <Typography variant="h4">Find a track ...</Typography>
         <TextField
           inputRef={register}
-          name="search"
-          id="search"
+          name="query"
+          id="query"
           label="search"
           variant="filled"
         />
@@ -30,4 +33,6 @@ export default function ({ onSubmit }) {
       </form>
     </Container>
   );
-}
+};
+
+export default SearchForm;

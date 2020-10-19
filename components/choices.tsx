@@ -97,21 +97,18 @@ const Choices: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     {i < 4 && (
-                      <IconButton size="small">
-                        <ArrowDownward
-                          color="action"
-                          onClick={() => onMoveDown(i + 1)}
-                        />
+                      <IconButton
+                        size="small"
+                        onClick={() => onMoveDown(i + 1)}
+                      >
+                        <ArrowDownward color="action" />
                       </IconButton>
                     )}
                   </TableCell>
                   <TableCell>
                     {i !== 0 && (
-                      <IconButton size="small">
-                        <ArrowUpward
-                          color="action"
-                          onClick={() => onMoveUp(i + 1)}
-                        />
+                      <IconButton size="small" onClick={() => onMoveUp(i + 1)}>
+                        <ArrowUpward color="action" />
                       </IconButton>
                     )}
                   </TableCell>
