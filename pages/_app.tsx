@@ -43,7 +43,9 @@ export default withUrqlClient((_ssrExchange, ctx) => {
     let token = cookie.get("token");
     if (!token) {
       token = uuidV4();
-      cookie.set("token", token);
+      cookie.set("token", token, {
+        expires: new Date(new Date().getTime() + 2592000000),
+      });
     }
 
     fetchOptions = {
