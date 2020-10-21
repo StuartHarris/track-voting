@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Delete, ArrowUpward, ArrowDownward } from "@material-ui/icons";
 
 import IconButton from "@material-ui/core/IconButton";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -19,6 +21,7 @@ import {
 } from "../generated/graphql";
 
 const Choices: React.FC = () => {
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [updateError, setUpdateError] = useState("");
   const [{ data, fetching, error }] = useChoicesQuery();
   const [, updateChoices] = useUpdateChoicesMutation();
@@ -35,6 +38,8 @@ const Choices: React.FC = () => {
     const { error } = await updateChoices(edited);
     if (error) {
       setUpdateError(error.message);
+    } else {
+      setUpdateSuccess(true);
     }
   };
 
@@ -48,6 +53,8 @@ const Choices: React.FC = () => {
     const { error } = await updateChoices(edited);
     if (error) {
       setUpdateError(error.message);
+    } else {
+      setUpdateSuccess(true);
     }
   };
 
@@ -61,8 +68,23 @@ const Choices: React.FC = () => {
     const { error } = await updateChoices(edited);
     if (error) {
       setUpdateError(error.message);
+    } else {
+      setUpdateSuccess(true);
     }
   };
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setUpdateSuccess(false);
+    setUpdateError("");
+  };
+
+  function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   return (
     <>
@@ -117,7 +139,24 @@ const Choices: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      {updateError && <div>{updateError}</div>}
+      <Snackbar
+        open={updateError !== ""}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="error">
+          {updateError}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={updateSuccess}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Your vote has been saved!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

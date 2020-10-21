@@ -44,6 +44,7 @@ const Results: React.FC<Props> = ({ query, width }) => {
 
   return (
     <div className={styles.root}>
+      <Typography variant="h4">Please select a release ...</Typography>
       <GridList
         cellHeight="auto"
         cols={getGridListCols()}

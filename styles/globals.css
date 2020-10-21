@@ -6,7 +6,7 @@ body {
   background-color: black;
 }
 
-body div div {
+body > div > div {
   background-color: black;
 }
 

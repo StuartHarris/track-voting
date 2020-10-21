@@ -7,7 +7,9 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import Grid from "@material-ui/core/Grid";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -28,6 +30,7 @@ interface Props {
 
 const Release: React.FC<Props> = ({ release_id }) => {
   const router = useRouter();
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [updateError, setUpdateError] = useState("");
 
   const [{ data, fetching, error }] = useReleaseQuery({
@@ -62,9 +65,25 @@ const Release: React.FC<Props> = ({ release_id }) => {
     if (error) {
       setUpdateError(error.message);
     } else {
-      router.push({ pathname: "/" });
+      setUpdateSuccess(true);
+      setTimeout(() => {
+        router.push({ pathname: "/" });
+      }, 2000);
     }
   };
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setUpdateSuccess(false);
+    setUpdateError("");
+  };
+
+  function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const labels = [
     ...Array.from(
@@ -139,7 +158,24 @@ const Release: React.FC<Props> = ({ release_id }) => {
             </TableBody>
           </Table>
         </TableContainer>{" "}
-        {updateError && <div>{updateError}</div>}
+        <Snackbar
+          open={updateError !== ""}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="error">
+            {updateError}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={updateSuccess}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="success">
+            Your vote has been saved!
+          </Alert>
+        </Snackbar>
       </Grid>
     </Grid>
   );
