@@ -165,20 +165,9 @@ const Choices: React.FC = () => {
         </Alert>
       </Snackbar>
       {has_five && (
-        <>
-          <Typography variant="h5">
-            <p>Thank you so much for registering your TRADE Top 5!</p>
-            <p>
-              The results will be announced at 19:00 on 30.10.20, on Facebook.
-            </p>
-          </Typography>
-          <Typography variant="h6">
-            <p>
-              You can change your vote any time you want, until the results are
-              announced.
-            </p>
-          </Typography>
-        </>
+        <Typography variant="h5">
+          <p>Thank you for voting! Your Trade Top 5 has been registered!</p>
+        </Typography>
       )}
     </>
   );
