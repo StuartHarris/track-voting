@@ -86,6 +86,13 @@ const Choices: React.FC = () => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
+  const has_five =
+    data?.choices?.choice1 &&
+    data?.choices?.choice2 &&
+    data?.choices?.choice3 &&
+    data?.choices?.choice4 &&
+    data?.choices?.choice5;
+
   return (
     <>
       <TableContainer component={Paper} className={styles.table}>
@@ -157,6 +164,22 @@ const Choices: React.FC = () => {
           Your vote has been saved!
         </Alert>
       </Snackbar>
+      {has_five && (
+        <>
+          <Typography variant="h5">
+            <p>Thank you so much for registering your TRADE Top 5!</p>
+            <p>
+              The results will be announced at 19:00 on 30.10.20, on Facebook.
+            </p>
+          </Typography>
+          <Typography variant="h6">
+            <p>
+              You can change your vote any time you want, until the results are
+              announced.
+            </p>
+          </Typography>
+        </>
+      )}
     </>
   );
 };
