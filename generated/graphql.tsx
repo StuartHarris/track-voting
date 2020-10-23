@@ -55,8 +55,9 @@ export type TopResults = {
 
 export type Score = {
   __typename?: 'Score';
-  title: Scalars['String'];
-  value: Scalars['Int'];
+  track: Scalars['String'];
+  score: Scalars['Int'];
+  votes: Scalars['Int'];
 };
 
 export type Release = {
@@ -186,7 +187,7 @@ export type TopQuery = (
     & Pick<TopResults, 'count'>
     & { scores?: Maybe<Array<Maybe<(
       { __typename?: 'Score' }
-      & Pick<Score, 'title' | 'value'>
+      & Pick<Score, 'track' | 'score' | 'votes'>
     )>>> }
   )> }
 );
@@ -274,8 +275,9 @@ export const TopDocument = gql`
   top {
     count
     scores {
-      title
-      value
+      track
+      score
+      votes
     }
   }
 }

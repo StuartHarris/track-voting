@@ -57,8 +57,9 @@ const typeDefs = gql`
     scores: [Score]
   }
   type Score {
-    title: String!
-    value: Int!
+    track: String!
+    score: Int!
+    votes: Int!
   }
   type Release {
     id: ID!
@@ -140,44 +141,53 @@ const resolvers = {
           .list({ collectionPath, queryOptions: { pageSize: 1000 } });
 
         let count = 0;
-        const scores: { [title: string]: number } = {};
+        const scores: {
+          [track: string]: { score: number; votes: number };
+        } = {};
         docs.documents.forEach((doc) => {
           count += 1;
           const c1: string = doc.fields.choice1;
           if (c1) {
-            let score = scores[c1] || 0;
+            let { score, votes } = scores[c1] || { score: 0, votes: 0 };
             score += 5;
-            scores[c1] = score;
+            votes += 1;
+            scores[c1] = { score, votes };
           }
           const c2: string = doc.fields.choice2;
           if (c2) {
-            let score = scores[c2] || 0;
+            let { score, votes } = scores[c2] || { score: 0, votes: 0 };
             score += 4;
-            scores[c2] = score;
+            votes += 1;
+            scores[c2] = { score, votes };
           }
           const c3: string = doc.fields.choice3;
           if (c3) {
-            let score = scores[c3] || 0;
+            let { score, votes } = scores[c3] || { score: 0, votes: 0 };
             score += 3;
-            scores[c3] = score;
+            votes += 1;
+            scores[c3] = { score, votes };
           }
           const c4: string = doc.fields.choice4;
           if (c4) {
-            let score = scores[c4] || 0;
+            let { score, votes } = scores[c4] || { score: 0, votes: 0 };
             score += 2;
-            scores[c4] = score;
+            votes += 1;
+            scores[c4] = { score, votes };
           }
           const c5: string = doc.fields.choice5;
           if (c5) {
-            let score = scores[c5] || 0;
+            let { score, votes } = scores[c5] || { score: 0, votes: 0 };
             score += 1;
-            scores[c5] = score;
+            votes += 1;
+            scores[c5] = { score, votes };
           }
         });
         const sorted = [];
         Object.entries(scores)
-          .sort(([, a], [, b]) => b - a)
-          .forEach(([title, value]) => sorted.push({ title, value }));
+          .sort(([, a], [, b]) => b.score + b.votes - (a.score + a.votes))
+          .forEach(([track, value]) =>
+            sorted.push({ track, score: value.score, votes: value.votes })
+          );
 
         return { count, scores: sorted };
       } catch (error) {

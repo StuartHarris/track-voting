@@ -47,8 +47,9 @@ export const SearchQuery = gql`
     top {
       count
       scores {
-        title
-        value
+        track
+        score
+        votes
       }
     }
   }

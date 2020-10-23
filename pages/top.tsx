@@ -26,24 +26,28 @@ export default function Home() {
           <TableHead>
             <TableRow>
               <TableCell align="right" width="100"></TableCell>
-              <TableCell align="left" width="100" className={styles.track}>
+              <TableCell align="left" className={styles.track}>
                 Track
               </TableCell>
-              <TableCell align="left" colSpan={4}>
-                Score
+              <TableCell align="left">Score</TableCell>
+              <TableCell align="left" className={styles.votes}>
+                Votes
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.top?.scores.map(({ title, value }, i) => (
+            {data?.top?.scores.map(({ track, score, votes }, i) => (
               <TableRow key={i}>
                 <TableCell component="th" scope="row" align="right">
                   {i + 1}
                 </TableCell>
                 <TableCell align="left" className={styles.track}>
-                  {title}
+                  {track}
                 </TableCell>
-                <TableCell>{value}</TableCell>
+                <TableCell align="left">{score}</TableCell>
+                <TableCell align="left" className={styles.votes}>
+                  {votes}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
