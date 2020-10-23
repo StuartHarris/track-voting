@@ -2,7 +2,6 @@ import { Typography } from "@material-ui/core";
 import Head from "next/head";
 import Link from "next/link";
 import { StylesProvider } from "@material-ui/core/styles";
-import Choices from "../components/choices";
 
 import styles from "./layout.module.css";
 
@@ -37,7 +36,6 @@ export default function Layout({
               <img src="/images/Trade30th.png" height="200px"></img>
             </a>
           </Link>
-          <Choices />
           {children}
         </main>
         <footer className={styles.footer}>
