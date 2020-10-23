@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 
 import Layout from "../components/layout";
 import { useTopQuery } from "../generated/graphql";
+import styles from "./top.module.css";
 
 export default function Home() {
   const [{ data, fetching, error }] = useTopQuery();
@@ -20,11 +21,12 @@ export default function Home() {
     <Layout>
       <TableContainer component={Paper}>
         <Typography variant="h4">Top Trade tracks</Typography>
+        <Typography variant="h5">{data?.top.count} votes registered</Typography>
         <Table size="small" aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="right" width="100"></TableCell>
-              <TableCell align="left" width="100">
+              <TableCell align="left" width="100" className={styles.track}>
                 Track
               </TableCell>
               <TableCell align="left" colSpan={4}>
@@ -38,7 +40,9 @@ export default function Home() {
                 <TableCell component="th" scope="row" align="right">
                   {i + 1}
                 </TableCell>
-                <TableCell align="left">{title}</TableCell>
+                <TableCell align="left" className={styles.track}>
+                  {title}
+                </TableCell>
                 <TableCell>{value}</TableCell>
               </TableRow>
             ))}
