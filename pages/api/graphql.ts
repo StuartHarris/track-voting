@@ -133,9 +133,12 @@ const resolvers = {
       }
     },
     top: async (_source, _args, { dataSources: { firestore } }) => {
-      const documentPath = `/choices`;
+      const collectionPath = `/choices`;
       try {
-        const docs = await firestore.documents().get({ documentPath });
+        const docs = await firestore
+          .documents()
+          .list({ collectionPath, queryOptions: { pageSize: 1000 } });
+
         let count = 0;
         const scores: { [title: string]: number } = {};
         docs.documents.forEach((doc) => {
