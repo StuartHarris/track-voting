@@ -42,6 +42,7 @@ const typeDefs = gql`
     search(query: String!): [SearchResult!]!
     release(id: ID!): Release
     choices(id: ID): Choices
+    top: TopResults
   }
   type SearchResult {
     id: ID!
@@ -50,6 +51,14 @@ const typeDefs = gql`
     cover_image: String
     year: String
     country: String
+  }
+  type TopResults {
+    count: Int!
+    scores: [Score]
+  }
+  type Score {
+    title: String!
+    value: Int!
   }
   type Release {
     id: ID!
@@ -123,6 +132,60 @@ const resolvers = {
         return error;
       }
     },
+    top: async (_source, _args, { dataSources: { firestore } }) => {
+      const collectionPath = `/choices`;
+      try {
+        const docs = await firestore
+          .documents()
+          .list({ collectionPath, queryOptions: { pageSize: 1000 } });
+
+        let count = 0;
+        const scores: { [title: string]: number } = {};
+        docs.documents.forEach((doc) => {
+          count += 1;
+          const c1: string = doc.fields.choice1;
+          if (c1) {
+            let score = scores[c1] || 0;
+            score += 5;
+            scores[c1] = score;
+          }
+          const c2: string = doc.fields.choice2;
+          if (c2) {
+            let score = scores[c2] || 0;
+            score += 4;
+            scores[c2] = score;
+          }
+          const c3: string = doc.fields.choice3;
+          if (c3) {
+            let score = scores[c3] || 0;
+            score += 3;
+            scores[c3] = score;
+          }
+          const c4: string = doc.fields.choice4;
+          if (c4) {
+            let score = scores[c4] || 0;
+            score += 2;
+            scores[c4] = score;
+          }
+          const c5: string = doc.fields.choice5;
+          if (c5) {
+            let score = scores[c5] || 0;
+            score += 1;
+            scores[c5] = score;
+          }
+        });
+        const sorted = [];
+        Object.entries(scores)
+          .sort(([, a], [, b]) => b - a)
+          .forEach(([title, value]) => sorted.push({ title, value }));
+
+        return { count, scores: sorted };
+      } catch (error) {
+        if (error.extensions?.response?.status === 404) return { count: 0 };
+        console.log({ error: JSON.stringify(error) });
+        return error;
+      }
+    },
   },
   Mutation: {
     choices: async (
@@ -137,7 +200,6 @@ const resolvers = {
       try {
         const doc = await firestore.documents().update({
           documentPath,
-          // fieldsToReturn: ["id", "choice1"],
           data: {
             fields: {
               id: {

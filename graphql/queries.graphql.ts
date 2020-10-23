@@ -43,6 +43,16 @@ export const SearchQuery = gql`
       choice5
     }
   }
+  query Top {
+    top {
+      count
+      scores {
+        title
+        value
+      }
+    }
+  }
+
   mutation UpdateChoices(
     $choice1: String
     $choice2: String

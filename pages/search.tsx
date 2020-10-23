@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 
 import Layout from "../components/layout";
+import Choices from "../components/choices";
 import Results from "../components/results";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <Choices />
       <Results query={query.toString()} />
     </Layout>
   );

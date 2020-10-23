@@ -19,6 +19,7 @@ export type Query = {
   search: Array<SearchResult>;
   release?: Maybe<Release>;
   choices?: Maybe<Choices>;
+  top?: Maybe<TopResults>;
 };
 
 
@@ -44,6 +45,18 @@ export type SearchResult = {
   cover_image?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
+};
+
+export type TopResults = {
+  __typename?: 'TopResults';
+  count: Scalars['Int'];
+  scores?: Maybe<Array<Maybe<Score>>>;
+};
+
+export type Score = {
+  __typename?: 'Score';
+  title: Scalars['String'];
+  value: Scalars['Int'];
 };
 
 export type Release = {
@@ -163,6 +176,21 @@ export type ChoicesQuery = (
   )> }
 );
 
+export type TopQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TopQuery = (
+  { __typename?: 'Query' }
+  & { top?: Maybe<(
+    { __typename?: 'TopResults' }
+    & Pick<TopResults, 'count'>
+    & { scores?: Maybe<Array<Maybe<(
+      { __typename?: 'Score' }
+      & Pick<Score, 'title' | 'value'>
+    )>>> }
+  )> }
+);
+
 export type UpdateChoicesMutationVariables = Exact<{
   choice1?: Maybe<Scalars['String']>;
   choice2?: Maybe<Scalars['String']>;
@@ -240,6 +268,21 @@ export const ChoicesDocument = gql`
 
 export function useChoicesQuery(options: Omit<Urql.UseQueryArgs<ChoicesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ChoicesQuery>({ query: ChoicesDocument, ...options });
+};
+export const TopDocument = gql`
+    query Top {
+  top {
+    count
+    scores {
+      title
+      value
+    }
+  }
+}
+    `;
+
+export function useTopQuery(options: Omit<Urql.UseQueryArgs<TopQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TopQuery>({ query: TopDocument, ...options });
 };
 export const UpdateChoicesDocument = gql`
     mutation UpdateChoices($choice1: String, $choice2: String, $choice3: String, $choice4: String, $choice5: String) {
