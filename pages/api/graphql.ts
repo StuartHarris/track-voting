@@ -2,6 +2,7 @@ import { ApolloServer, gql } from "apollo-server-micro";
 import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
 import FireSource from "@devskope/apollo-firesource";
 import fs from "fs";
+import slug from "slug";
 
 fs.writeFileSync(
   process.env.FIRESOURCE_CREDENTIALS,
@@ -142,45 +143,29 @@ const resolvers = {
 
         let count = 0;
         const scores: {
-          [track: string]: { score: number; votes: number };
+          [track: string]: { track: string; score: number; votes: number };
         } = {};
         docs.documents.forEach((doc) => {
           count += 1;
-          const c1: string = doc.fields.choice1;
-          if (c1) {
-            let { score, votes } = scores[c1] || { score: 0, votes: 0 };
-            score += 5;
-            votes += 1;
-            scores[c1] = { score, votes };
+          function add(field: string, weight: number) {
+            const name = doc.fields[field];
+            const s: string = slug(name);
+            if (s) {
+              let { track, score, votes } = scores[s] || {
+                track: name,
+                score: 0,
+                votes: 0,
+              };
+              score += weight;
+              votes += 1;
+              scores[s] = { track, score, votes };
+            }
           }
-          const c2: string = doc.fields.choice2;
-          if (c2) {
-            let { score, votes } = scores[c2] || { score: 0, votes: 0 };
-            score += 4;
-            votes += 1;
-            scores[c2] = { score, votes };
-          }
-          const c3: string = doc.fields.choice3;
-          if (c3) {
-            let { score, votes } = scores[c3] || { score: 0, votes: 0 };
-            score += 3;
-            votes += 1;
-            scores[c3] = { score, votes };
-          }
-          const c4: string = doc.fields.choice4;
-          if (c4) {
-            let { score, votes } = scores[c4] || { score: 0, votes: 0 };
-            score += 2;
-            votes += 1;
-            scores[c4] = { score, votes };
-          }
-          const c5: string = doc.fields.choice5;
-          if (c5) {
-            let { score, votes } = scores[c5] || { score: 0, votes: 0 };
-            score += 1;
-            votes += 1;
-            scores[c5] = { score, votes };
-          }
+          add("choice1", 5);
+          add("choice2", 4);
+          add("choice3", 3);
+          add("choice4", 2);
+          add("choice5", 1);
         });
         const sorted = [];
         Object.entries(scores)
@@ -188,9 +173,7 @@ const resolvers = {
             ([, a], [, b]) =>
               b.score * 1000 + b.votes - (a.score * 1000 + a.votes)
           )
-          .forEach(([track, value]) =>
-            sorted.push({ track, score: value.score, votes: value.votes })
-          );
+          .forEach(([_, value]) => sorted.push(value));
 
         return { count, scores: sorted };
       } catch (error) {
