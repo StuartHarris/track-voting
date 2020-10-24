@@ -42,7 +42,9 @@ export default function Home() {
                   {i + 1}
                 </TableCell>
                 <TableCell align="left" className={styles.track}>
-                  {track}
+                  {track.map((t) => (
+                    <p>{t}</p>
+                  ))}
                 </TableCell>
                 <TableCell align="left">{score}</TableCell>
                 <TableCell align="left" className={styles.votes}>

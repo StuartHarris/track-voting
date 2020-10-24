@@ -4,6 +4,11 @@ import FireSource from "@devskope/apollo-firesource";
 import fs from "fs";
 import slug from "slug";
 
+const REMOVE_LIST = new RegExp(
+  "\\b((mix)|(remix)|(edit)|(original)|(dub)|(the)|(a))\\b",
+  "ig"
+);
+
 fs.writeFileSync(
   process.env.FIRESOURCE_CREDENTIALS,
   Buffer.from(process.env.FIRESTORE_SA, "base64")
@@ -58,7 +63,7 @@ const typeDefs = gql`
     scores: [Score]
   }
   type Score {
-    track: String!
+    track: [String!]
     score: Int!
     votes: Int!
   }
@@ -143,22 +148,32 @@ const resolvers = {
 
         let count = 0;
         const scores: {
-          [track: string]: { track: string; score: number; votes: number };
+          [track: string]: { track: Set<string>; score: number; votes: number };
         } = {};
         docs.documents.forEach((doc) => {
           count += 1;
           function add(field: string, weight: number) {
             const name = doc.fields[field];
-            const s: string = slug(name);
-            if (s) {
+            if (name) {
+              const s: string = slug(
+                name
+                  .split(" – ")[1]
+                  .replace('12"', "")
+                  .replace("TdV", "tony de vit")
+                  .replace("'s ", ""),
+                {
+                  remove: REMOVE_LIST,
+                }
+              );
+
               let { track, score, votes } = scores[s] || {
-                track: name,
+                track: new Set(),
                 score: 0,
                 votes: 0,
               };
               score += weight;
               votes += 1;
-              scores[s] = { track, score, votes };
+              scores[s] = { track: track.add(name), score, votes };
             }
           }
           add("choice1", 5);
@@ -173,7 +188,13 @@ const resolvers = {
             ([, a], [, b]) =>
               b.score * 1000 + b.votes - (a.score * 1000 + a.votes)
           )
-          .forEach(([_, value]) => sorted.push(value));
+          .forEach(([_, value]) =>
+            sorted.push({
+              track: Array.from(value.track.keys()),
+              score: value.score,
+              votes: value.votes,
+            })
+          );
 
         return { count, scores: sorted };
       } catch (error) {

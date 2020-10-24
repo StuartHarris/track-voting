@@ -8,6 +8,9 @@
 .track {
   min-width: 600px;
 }
+.track p {
+  margin: 0;
+}
 .votes {
   width: 100%;
 }

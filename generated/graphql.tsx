@@ -55,7 +55,7 @@ export type TopResults = {
 
 export type Score = {
   __typename?: 'Score';
-  track: Scalars['String'];
+  track?: Maybe<Array<Scalars['String']>>;
   score: Scalars['Int'];
   votes: Scalars['Int'];
 };
