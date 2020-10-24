@@ -186,7 +186,7 @@ const resolvers = {
         Object.entries(scores)
           .sort(
             ([, a], [, b]) =>
-              b.score * 1000 + b.votes - (a.score * 1000 + a.votes)
+              b.score * 1000 - b.votes - (a.score * 1000 - a.votes)
           )
           .forEach(([_, value]) =>
             sorted.push({
