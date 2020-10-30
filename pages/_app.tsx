@@ -1,10 +1,11 @@
 import React from "react";
-import { withUrqlClient, NextUrqlAppContext } from "next-urql";
-import NextApp, { AppProps } from "next/app";
-import fetch from "isomorphic-unfetch";
+
 import { Container, CssBaseline } from "@material-ui/core";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Cookies from "cookies";
+import fetch from "isomorphic-unfetch";
+import { withUrqlClient, NextUrqlAppContext } from "next-urql";
+import NextApp, { AppProps } from "next/app";
 import { v4 as uuidV4 } from "uuid";
 
 import "../styles/globals.css";

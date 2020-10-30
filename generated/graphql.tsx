@@ -288,7 +288,13 @@ export function useTopQuery(options: Omit<Urql.UseQueryArgs<TopQueryVariables>, 
 };
 export const UpdateChoicesDocument = gql`
     mutation UpdateChoices($choice1: String, $choice2: String, $choice3: String, $choice4: String, $choice5: String) {
-  choices(choice1: $choice1, choice2: $choice2, choice3: $choice3, choice4: $choice4, choice5: $choice5) {
+  choices(
+    choice1: $choice1
+    choice2: $choice2
+    choice3: $choice3
+    choice4: $choice4
+    choice5: $choice5
+  ) {
     id
     choice1
     choice2

@@ -1,7 +1,9 @@
+import React from "react";
+
 import { useRouter } from "next/router";
 
-import Layout from "../../components/layout";
 import Choices from "../../components/choices";
+import Layout from "../../components/layout";
 import Release from "../../components/release";
 
 export default function Home() {

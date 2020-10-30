@@ -1,7 +1,8 @@
-import { ApolloServer, gql } from "apollo-server-micro";
-import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
-import FireSource from "@devskope/apollo-firesource";
 import fs from "fs";
+
+import FireSource from "@devskope/apollo-firesource";
+import { RESTDataSource, RequestOptions } from "apollo-datasource-rest";
+import { ApolloServer, gql } from "apollo-server-micro";
 import slug from "slug";
 
 const REMOVE_LIST = new RegExp(
@@ -175,14 +176,16 @@ const resolvers = {
                 }
               );
 
-              let { track, score, votes } = scores[s] || {
+              const { track, score, votes } = scores[s] || {
                 track: new Set(),
                 score: 0,
                 votes: 0,
               };
-              score += weight;
-              votes += 1;
-              scores[s] = { track: track.add(name), score, votes };
+              scores[s] = {
+                track: track.add(name),
+                score: score + weight,
+                votes: votes + 1,
+              };
             }
           }
           add("choice1", 5);
@@ -197,7 +200,7 @@ const resolvers = {
             ([, a], [, b]) =>
               b.score * 1000 - b.votes - (a.score * 1000 - a.votes)
           )
-          .forEach(([_, value]) =>
+          .forEach(([, value]) =>
             sorted.push({
               track: Array.from(value.track.keys()),
               score: value.score,
