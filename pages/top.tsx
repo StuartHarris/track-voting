@@ -42,8 +42,8 @@ export default function Home() {
                   {i + 1}
                 </TableCell>
                 <TableCell align="left" className={styles.track}>
-                  {track.map((t) => (
-                    <p>{t}</p>
+                  {track.map((t, i) => (
+                    <p key={i}>{t}</p>
                   ))}
                 </TableCell>
                 <TableCell align="left">{score}</TableCell>

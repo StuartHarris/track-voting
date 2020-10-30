@@ -142,22 +142,31 @@ const resolvers = {
     top: async (_source, _args, { dataSources: { firestore } }) => {
       const collectionPath = `/choices`;
       try {
-        const docs = await firestore
-          .documents()
-          .list({ collectionPath, queryOptions: { pageSize: 1000 } });
+        let documents = [];
+        let docs: {
+          documents?: [];
+          nextPageToken?: string;
+        } = {};
+        do {
+          docs = await firestore.documents().list({
+            collectionPath,
+            queryOptions: { pageSize: 300, pageToken: docs.nextPageToken },
+          });
+          documents = documents.concat(docs.documents);
+        } while (docs.nextPageToken != null);
 
         let count = 0;
         const scores: {
           [track: string]: { track: Set<string>; score: number; votes: number };
         } = {};
-        docs.documents.forEach((doc) => {
+
+        documents.forEach((doc) => {
           count += 1;
           function add(field: string, weight: number) {
             const name = doc.fields[field];
             if (name) {
               const s: string = slug(
                 name
-                  .split(" – ")[1]
                   .replace('12"', "")
                   .replace("TdV", "tony de vit")
                   .replace("'s ", ""),
